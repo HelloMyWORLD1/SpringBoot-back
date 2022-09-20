@@ -4,8 +4,9 @@
 
 ### 기술
 
-- SpringBoot, JPA
-- MySQL
+- IntelliJ
+- Spring, SpringBoot, MVC, Java, JPA
+- MySQL, RDBMS
 
 
 

@@ -1,11 +1,11 @@
 spring:
   config:
     import:
-      - application-local.yml
+      - application-local.yml # Notion 코드공유 확인
 
   jpa:
     hibernate:
-      ddl-auto: create # create 경우 시작시 table drop-create 함
+      ddl-auto: create # 매번 table 초기화 됨
     properties:
       hibernate:
         format_sql: true

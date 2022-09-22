@@ -1,0 +1,18 @@
+spring:
+  config:
+    import:
+      - application-local.yml # Notion 코드공유 확인
+
+  jpa:
+    hibernate:
+      ddl-auto: create # 매번 table 초기화 됨
+    properties:
+      hibernate:
+        format_sql: true
+
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type: trace
+
+server:
+  port: 8001

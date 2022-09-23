@@ -16,3 +16,11 @@ logging.level:
 
 server:
   port: 8001
+
+
+springdoc:
+  swagger-ui:
+    path: swagger.html
+  version: v1
+  paths-to-match:
+    - /api/**

@@ -28,8 +28,8 @@ public class UserService {
 
     @Transactional
     public UserCreateResponse createUser(UserCreateRequest userCreateRequest) {
-        User user = userCreateRequest.toEntity();
-        Long userId = userRepository.save(user).getId();
+        User user = userCreateRequest.toEntityTest();
+        Long userId = userRepository.save(user).getUserId();
         log.info("유저가 생성되었습니다. ID: {}", userId.toString());
         return new UserCreateResponse(userId);
     }
@@ -37,7 +37,7 @@ public class UserService {
     public UsersResponse getAllUsers() {
         List<User> users = userRepository.findAll();
         List<UserDto> userDtos = users.stream()
-                .map(i -> new UserDto(i.getId(), i.getUsername()))
+                .map(i -> new UserDto(i.getUserEmail(), i.getUserPassword(), i.getUserName()))
                 .collect(Collectors.toList());
         return new UsersResponse(userDtos);
     }

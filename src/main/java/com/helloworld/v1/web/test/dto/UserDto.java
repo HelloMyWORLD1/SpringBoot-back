@@ -4,15 +4,24 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
 
-    /**
-     * 테스트 용 입니다.
-     */
+    @NotNull
+    @Size(min = 3, max = 50)
+    private String email;
 
-    private Long id;
+    @NotNull
+    @Size(min = 3, max = 50)
+    private String password;
+
+    @NotNull
+    @Size(min = 3, max = 50)
     private String username;
+
 }

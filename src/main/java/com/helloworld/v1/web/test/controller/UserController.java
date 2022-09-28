@@ -13,12 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class UserController {
-    /**
-     * 테스트 용 입니다.
-     */
-
     private final UserService userService;
-
     /**
      * 유저 생성
      * @param userCreateRequest

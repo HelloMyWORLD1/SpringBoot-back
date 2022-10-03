@@ -1,78 +1,93 @@
 package com.helloworld.v1.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Builder
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-public class User{
-
-    /**
-     * 테스트 용 입니다.
-      */
+@AllArgsConstructor
+@Table(name = "user")
+public class User extends BaseTimeEntity implements UserDetails {
 
     @Id
-    @GeneratedValue
-    @Column(name = "USER_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @NotBlank
-    @Column(name = "USER_EMAIL", nullable = false, length = 100, unique = true)
-    private String userEmail;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(nullable = false, length = 100)
+    private String password;
 
-    @NotBlank
-    @Column(name = "USER_PASSWORD")
-    private String userPassword;
+    @Column(nullable = false, unique = true, length = 30)
+    private String email;
 
-//    @NotBlank
-    @Column(name = "USER_CREATE_AT")
-    private LocalDateTime userCreateAt;
+    @Column(nullable = false, length = 100)
+    private String name;
 
-//    @NotBlank
-    @Column(name = "USER_UPDATE_AT")
-    private LocalDateTime userUpdateAt;
+    @Column(nullable = false, length = 20)
+    private String nickName;
 
-//    @NotBlank
-    @Column(name = "USER_PHONE_NUMBER")
-    private String userPhoneNumber;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
 
-//    @NotBlank
-    @Column(name = "USER_NAME")
-    private String userName;
-
-//    @NotBlank
-    @Column(name = "USER_SEX")
-    private Sex userSex;
-
-//    @NotBlank
-    @Column(name = "USER_PROFILE_URL")
-    private String userProfileUrl;
-
-    public User(String userEmail, String userPassword, LocalDateTime userCreateAt,
-                LocalDateTime userUpdateAt, String userPhoneNumber, String userName,
-                Sex userSex, String userProfileUrl) {
-        this.userEmail = userEmail;
-        this.userPassword = userPassword;
-        this.userCreateAt = userCreateAt;
-        this.userUpdateAt = userUpdateAt;
-        this.userPhoneNumber = userPhoneNumber;
-        this.userName = userName;
-        this.userSex = userSex;
-        this.userProfileUrl = userProfileUrl;
+    public void updateNickName(String nickName) {
+        this.nickName = nickName;
     }
 
-    public User(String userEmail, String userPassword) {
-        this.userEmail = userEmail;
-        this.userPassword = userPassword;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles
+                .stream().map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
-    public void setPassword(String password) {
-        this.userPassword = password;
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
+

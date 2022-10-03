@@ -1,3 +1,6 @@
+server:
+  port: 8001
+
 spring:
   config:
     import:
@@ -9,10 +12,12 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  message:
+    basename: i18n/exception
+    encoding: UTF-8
+  profiles:
+    include: jwt
 
 logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
-
-server:
-  port: 8001

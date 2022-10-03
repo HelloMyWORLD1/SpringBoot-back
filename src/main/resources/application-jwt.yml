@@ -1,0 +1,4 @@
+### /resources/application-jwt.yml
+spring:
+  jwt:
+    secret: vHio_iQnXpq@b$n&q

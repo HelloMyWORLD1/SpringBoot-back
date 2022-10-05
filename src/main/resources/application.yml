@@ -1,7 +1,8 @@
 spring:
   config:
     import:
-      - application-local.yml # Notion 코드공유 확인
+#      - application-local.yml # Notion 코드공유 확인
+      - application-dev.yml # Notion 코드공유 확인
 
   jpa:
     hibernate:

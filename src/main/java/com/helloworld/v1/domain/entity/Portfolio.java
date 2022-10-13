@@ -28,4 +28,12 @@ public class Portfolio {
     private String education;
 
     private Long userId; // 유사 FK
+
+    public Portfolio(String detailJob, String title, String introduce, String education, Long userId) {
+        this.detailJob = detailJob;
+        this.title = title;
+        this.introduce = introduce;
+        this.education = education;
+        this.userId = userId;
+    }
 }

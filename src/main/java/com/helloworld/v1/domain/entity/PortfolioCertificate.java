@@ -20,4 +20,9 @@ public class PortfolioCertificate {
     private String certificate;
 
     private Long portfolioId; // 유사 FK
+
+    public PortfolioCertificate(String certificate, Long portfolioId) {
+        this.certificate = certificate;
+        this.portfolioId = portfolioId;
+    }
 }

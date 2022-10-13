@@ -20,4 +20,9 @@ public class PortfolioForeignLanguage {
     private String foreignLanguage;
 
     private Long portfolioId; // 유사 FK
+
+    public PortfolioForeignLanguage(String foreignLanguage, Long portfolioId) {
+        this.foreignLanguage = foreignLanguage;
+        this.portfolioId = portfolioId;
+    }
 }

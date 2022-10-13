@@ -22,4 +22,10 @@ public class PortfolioProject {
     private String content;
 
     private Long portfolioId; // 유사 FK
+
+    public PortfolioProject(String title, String content, Long portfolioId) {
+        this.title = title;
+        this.content = content;
+        this.portfolioId = portfolioId;
+    }
 }

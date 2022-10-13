@@ -22,4 +22,10 @@ public class PortfolioTech {
     private String content;
 
     private Long portfolioId; // 유사 FK
+
+    public PortfolioTech(String techName, String content, Long portfolioId) {
+        this.techName = techName;
+        this.content = content;
+        this.portfolioId = portfolioId;
+    }
 }

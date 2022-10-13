@@ -12,23 +12,17 @@ import javax.persistence.Id;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PortfolioCareer {
+public class PortfolioSns {
     @Id
     @GeneratedValue
     private Long id;
 
-    private String year;
-
-    private String title;
-
-    private String content;
+    private String sns;
 
     private Long portfolioId; // 유사 FK
 
-    public PortfolioCareer(String year, String title, String content, Long portfolioId) {
-        this.year = year;
-        this.title = title;
-        this.content = content;
+    public PortfolioSns(String sns, Long portfolioId) {
+        this.sns = sns;
         this.portfolioId = portfolioId;
     }
 }

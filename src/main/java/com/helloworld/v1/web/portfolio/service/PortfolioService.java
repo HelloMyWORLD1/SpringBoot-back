@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -74,5 +75,30 @@ public class PortfolioService {
 
         // 성공 반환
         return new PortfolioCreateResponse(true, "포트폴리오 등록 성공");
+    }
+
+    public PortfolioGetResponse getPortfolios(String field) {
+        /*
+        회원관리 전까지 field가 없으므로 전체 조회
+         */
+
+        List<Portfolio> portfolios = portfolioRepository.findAll();
+        List<PortfolioGetDataDto> data = new ArrayList<>();
+        for (Portfolio portfolio : portfolios) {
+            String tempNickname = "helloMin";
+            String tempName = "이의현";
+            String tempField = "개발자";
+            String tempProfileImage = "test";
+            data.add(new PortfolioGetDataDto(tempNickname,
+                    portfolio.getDetailJob(),
+                    tempName,
+                    tempField,
+                    tempProfileImage,
+                    portfolio.getTitle(),
+                    new ArrayList<>(),
+                    new ArrayList<>()
+                    ));
+        }
+        return new PortfolioGetResponse(true, "로그인 체크 성공", data);
     }
 }

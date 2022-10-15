@@ -5,6 +5,9 @@ import com.helloworld.v1.domain.repository.*;
 import com.helloworld.v1.web.portfolio.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,7 +84,24 @@ public class PortfolioService {
         /*
         회원관리 전까지 field가 없으므로 전체 조회
          */
+        List<PortfolioGetDataDto> data = getPortfolioSamples();
+        return new PortfolioGetResponse(true, "로그인 체크 성공", data);
+    }
 
+    public PortfolioGetLatestResponse getPortfoliosLatest(Integer page) {
+        long countNum = portfolioRepository.count();
+        Integer size = 20;
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").descending());
+
+        PortfolioGetLatestDataDto data = new PortfolioGetLatestDataDto(countNum, getPortfolioSamples(pageRequest));
+        return new PortfolioGetLatestResponse(true, "페이지에 따른 데이터 가져오기 성공.", data);
+    }
+
+    /***
+     * 이하 공통 Method
+     */
+
+    private List<PortfolioGetDataDto> getPortfolioSamples() {
         List<Portfolio> portfolios = portfolioRepository.findAll();
         List<PortfolioGetDataDto> data = new ArrayList<>();
         for (Portfolio portfolio : portfolios) {
@@ -97,8 +117,30 @@ public class PortfolioService {
                     portfolio.getTitle(),
                     new ArrayList<>(),
                     new ArrayList<>()
-                    ));
+            ));
         }
-        return new PortfolioGetResponse(true, "로그인 체크 성공", data);
+        return data;
+    }
+
+    private List<PortfolioGetDataDto> getPortfolioSamples(PageRequest pageRequest) {
+        Page<Portfolio> portfolioPage = portfolioRepository.findAll(pageRequest);
+        List<Portfolio> portfolios = portfolioPage.getContent();
+        List<PortfolioGetDataDto> data = new ArrayList<>();
+        for (Portfolio portfolio : portfolios) {
+            String tempNickname = "helloMin";
+            String tempName = "이의현";
+            String tempField = "개발자";
+            String tempProfileImage = "test";
+            data.add(new PortfolioGetDataDto(tempNickname,
+                    portfolio.getDetailJob(),
+                    tempName,
+                    tempField,
+                    tempProfileImage,
+                    portfolio.getTitle(),
+                    new ArrayList<>(),
+                    new ArrayList<>()
+            ));
+        }
+        return data;
     }
 }

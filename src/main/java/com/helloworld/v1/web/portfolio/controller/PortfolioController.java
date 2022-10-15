@@ -2,6 +2,7 @@ package com.helloworld.v1.web.portfolio.controller;
 
 import com.helloworld.v1.web.portfolio.dto.PortfolioCreateRequest;
 import com.helloworld.v1.web.portfolio.dto.PortfolioCreateResponse;
+import com.helloworld.v1.web.portfolio.dto.PortfolioGetLatestResponse;
 import com.helloworld.v1.web.portfolio.dto.PortfolioGetResponse;
 import com.helloworld.v1.web.portfolio.service.PortfolioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,5 +29,11 @@ public class PortfolioController {
     @GetMapping("/{field}/like")
     public ResponseEntity<PortfolioGetResponse> getPortfolios(@PathVariable("field") String field) {
         return ResponseEntity.ok(portfolioService.getPortfolios(field));
+    }
+
+    @Operation(description = "포트폴리오 받기 (메인페이지)") // Swagger 표시
+    @GetMapping("/latest")
+    public ResponseEntity<PortfolioGetLatestResponse> getPortfoliosLatest(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page) {
+        return ResponseEntity.ok(portfolioService.getPortfoliosLatest(page));
     }
 }

@@ -1,8 +1,11 @@
 package com.helloworld.v1.web.portfolio.service;
 
+import com.helloworld.v1.common.exception.ApiException;
+import com.helloworld.v1.common.exception.ExceptionEnum;
 import com.helloworld.v1.domain.entity.*;
 import com.helloworld.v1.domain.repository.*;
 import com.helloworld.v1.web.portfolio.dto.*;
+import com.helloworld.v1.web.portfolio.dto.portfolionick.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -95,6 +99,33 @@ public class PortfolioService {
 
         PortfolioGetLatestDataDto data = new PortfolioGetLatestDataDto(countNum, getPortfolioSamples(pageRequest));
         return new PortfolioGetLatestResponse(true, "페이지에 따른 데이터 가져오기 성공.", data);
+    }
+
+    public PortfolioGetNicknameResponse getPortfolioByNickname(String nickname) {
+        // 닉네임에서 userId 조회
+        /**
+         * 회원 관리 전에 userId = 1L
+         */
+//        Long userId = 1L;
+//        Optional<Portfolio> optionalPortfolio = portfolioRepository.findByUserId(userId);
+//        if (optionalPortfolio.isEmpty()) {
+//            throw new ApiException(ExceptionEnum.NO_SEARCH_RESOURCE);
+//        }
+        Portfolio portfolio = portfolioRepository.findAll().get(0);
+        // 포트폴리오 연관 Entity 조회
+//        Portfolio portfolio = optionalPortfolio.get();
+        Long portfolioId = portfolio.getId();
+        List<String> sns = portfolioSnsRepository.findAllByPortfolioId(portfolioId).stream().map(PortfolioSns::getSns).toList();
+        List<PortfolioGetNicknameDataTechDto> tech = portfolioTechRepository.findAllByPortfolioId(portfolioId).stream().map(p -> new PortfolioGetNicknameDataTechDto(p.getTechName(), p.getContent())).toList();
+        List<String> certificate = portfolioCertificateRepository.findAllByPortfolioId(portfolioId).stream().map(PortfolioCertificate::getCertificate).toList();
+        List<String> foreignLanguage = portfolioForeignLanguageRepository.findAllByPortfolioId(portfolioId).stream().map(PortfolioForeignLanguage::getForeignLanguage).toList();
+        List<PortfolioGetNicknameDataProjectDto> project = portfolioProjectRepository.findAllByPortfolioId(portfolioId).stream().map(p -> new PortfolioGetNicknameDataProjectDto(p.getTitle(), p.getContent())).toList();
+        List<PortfolioGetNicknameDataCareerDto> career = portfolioCareerRepository.findAllByPortfolioId(portfolioId).stream().map(p -> new PortfolioGetNicknameDataCareerDto(p.getYear(), p.getTitle(), p.getContent())).toList();
+
+        // Response 생성
+        PortfolioGetNicknameDataDto data = new PortfolioGetNicknameDataDto(sns, portfolio.getDetailJob(), portfolio.getTitle(), portfolio.getIntroduce(),
+                "sample", "sample", tech, portfolio.getEducation(), certificate, foreignLanguage, project, career);
+        return new PortfolioGetNicknameResponse(true, "개인 포트폴리오 조회 성공", data);
     }
 
     /***

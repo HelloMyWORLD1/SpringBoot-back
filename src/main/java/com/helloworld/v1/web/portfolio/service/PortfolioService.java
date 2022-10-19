@@ -133,7 +133,7 @@ public class PortfolioService {
      */
 
     private List<PortfolioGetDataDto> getPortfolioSamples() {
-        List<Portfolio> portfolios = portfolioRepository.findAll();
+        List<Portfolio> portfolios = portfolioRepository.findTop12ByOrderByIdDesc();
         List<PortfolioGetDataDto> data = new ArrayList<>();
         for (Portfolio portfolio : portfolios) {
             String tempNickname = "helloMin";

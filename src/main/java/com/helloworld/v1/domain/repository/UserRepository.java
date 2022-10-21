@@ -1,18 +1,13 @@
 package com.helloworld.v1.domain.repository;
 
 import com.helloworld.v1.domain.entity.User;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
-
-@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
-    List<User> findByName(String name);
-
-    Optional<User> findByEmail(String email);
-
+    // 쿼리 수행시 Lazy조회가 아닌 Eager조회를 통한 authorities를 같이 가지고 온다.
+    @EntityGraph(attributePaths = "authorities")
+    Optional<User> findOneWithAuthoritiesByUsername(String username);
 }

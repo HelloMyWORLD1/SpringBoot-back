@@ -2,21 +2,26 @@ server:
   port: 8001
 
 spring:
+
+  h2:
+    console:
+      enabled: true
   config:
     import:
       - application-local.yml # Notion 코드공유 확인
-
   jpa:
     hibernate:
-      ddl-auto: create # 매번 table 초기화 됨
+      ddl-auto: create-drop # 매번 table 초기화 됨
     properties:
       hibernate:
         format_sql: true
-  message:
-    basename: i18n/exception
-    encoding: UTF-8
-  profiles:
-    include: jwt
+        show_sql: true
+#  profiles:
+#    include: jwt
+jwt:
+  header: Authorization
+  secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
+  token-validity-in-seconds: 86400
 
 logging.level:
   org.hibernate.SQL: debug

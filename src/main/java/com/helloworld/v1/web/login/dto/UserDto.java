@@ -17,16 +17,26 @@ import java.util.stream.Collectors;
 public class UserDto {
 
     @NotNull
-    @Size(min = 3, max = 50)
-    private String username;
+    private String email;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotNull
-    @Size(min = 3, max = 100)
     private String password;
 
     @NotNull
-    @Size(min = 3, max = 50)
+    private String username;
+
+    @NotNull
+    private String part;
+
+    @NotNull
+    private String phoneNumber;
+
+    private String profileImage;
+
+    private String dateOfBirth;
+
+    @NotNull
     private String nickname;
 
     private Set<AuthorityDto> authorityDtoSet;
@@ -35,7 +45,12 @@ public class UserDto {
         if(user == null) return null;
 
         return UserDto.builder()
+                .email(user.getEmail())
                 .username(user.getUsername())
+                .part(user.getPart())
+                .phoneNumber(user.getPhoneNumber())
+                .profileImage(user.getProfileImage())
+                .dateOfBirth(user.getDateOfBirth())
                 .nickname(user.getNickname())
                 .authorityDtoSet(user.getAuthorities().stream()
                         .map(authority -> AuthorityDto.builder().authorityName(authority.getAuthorityName()).build())

@@ -34,8 +34,13 @@ public class UserService {
                 .build();
 
         User user = User.builder()
-                .username(userDto.getUsername())
+                .email(userDto.getEmail())
                 .password(passwordEncoder.encode(userDto.getPassword()))
+                .username(userDto.getUsername())
+                .part(userDto.getPart())
+                .phoneNumber(userDto.getPhoneNumber())
+                .profileImage(userDto.getProfileImage())
+                .dateOfBirth(userDto.getDateOfBirth())
                 .nickname(userDto.getNickname())
                 .authorities(Collections.singleton(authority))
                 .activated(true)

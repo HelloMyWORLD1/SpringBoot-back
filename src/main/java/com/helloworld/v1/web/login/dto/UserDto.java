@@ -27,14 +27,14 @@ public class UserDto {
     private String username;
 
     @NotNull
-    private String part;
+    private String field;
 
     @NotNull
-    private String phoneNumber;
+    private String phone;
 
     private String profileImage;
 
-    private String dateOfBirth;
+    private String birth;
 
     @NotNull
     private String nickname;
@@ -47,14 +47,27 @@ public class UserDto {
         return UserDto.builder()
                 .email(user.getEmail())
                 .username(user.getUsername())
-                .part(user.getPart())
-                .phoneNumber(user.getPhoneNumber())
+                .field(user.getField())
+                .phone(user.getPhone())
                 .profileImage(user.getProfileImage())
-                .dateOfBirth(user.getDateOfBirth())
+                .birth(user.getBirth())
                 .nickname(user.getNickname())
                 .authorityDtoSet(user.getAuthorities().stream()
                         .map(authority -> AuthorityDto.builder().authorityName(authority.getAuthorityName()).build())
                         .collect(Collectors.toSet()))
                 .build();
+    }
+
+    @Override
+    public String toString() {
+        return "UserDto{" +
+                "email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", field='" + field + '\'' +
+                ", phone='" + phone + '\'' +
+                ", profileImage='" + profileImage + '\'' +
+                ", birth='" + birth + '\'' +
+                ", nickname='" + nickname + '\'' +
+                '}';
     }
 }

@@ -1,5 +1,6 @@
 package com.helloworld.v1.web.login.controller;
 
+import com.helloworld.v1.web.login.dto.UserCreateResponse;
 import com.helloworld.v1.web.login.dto.UserDto;
 import com.helloworld.v1.web.login.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UserDto> signup(
+    public ResponseEntity<UserCreateResponse> signup(
             @Valid @RequestBody UserDto userDto
     ) {
         return ResponseEntity.ok(userService.signup(userDto));

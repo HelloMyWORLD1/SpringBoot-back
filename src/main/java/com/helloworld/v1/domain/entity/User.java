@@ -1,12 +1,8 @@
 package com.helloworld.v1.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -16,7 +12,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class    User {
 
     @Id
     @Column(name = "user_id")
@@ -26,20 +22,28 @@ public class User {
     @Column(name = "activated")
     private boolean activated;
 
+    @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
     private String password;
 
+    @Column(name = "username")
     private String username;
 
-    private String part;
+    @Column(name = "field")
+    private String field;
 
-    private String phoneNumber;
+    @Column(name = "phone")
+    private String phone;
 
+    @Column(name = "profileImage")
     private String profileImage;
 
-    private String dateOfBirth;
+    @Column(name = "birth")
+    private String birth;
 
+    @Column(name = "nickname")
     private String nickname;
 
     @ManyToMany

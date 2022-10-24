@@ -8,6 +8,7 @@ import com.helloworld.v1.domain.entity.Authority;
 import com.helloworld.v1.domain.entity.User;
 import com.helloworld.v1.domain.repository.UserRepository;
 import com.helloworld.v1.util.SecurityUtil;
+import com.helloworld.v1.web.login.dto.UserCreateResponse;
 import com.helloworld.v1.web.login.dto.UserDto;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,8 @@ public class UserService {
     }
 
     @Transactional
-    public UserDto signup(UserDto userDto) {
-        if (userRepository.findOneWithAuthoritiesByUsername(userDto.getUsername()).orElse(null) != null) {
+    public UserCreateResponse signup(UserDto userDto) {
+        if (userRepository.findOneWithAuthoritiesByUsername(userDto.getEmail()).orElse(null) != null) {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
         }
 
@@ -37,16 +38,18 @@ public class UserService {
                 .email(userDto.getEmail())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .username(userDto.getUsername())
-                .part(userDto.getPart())
-                .phoneNumber(userDto.getPhoneNumber())
+                .field(userDto.getField())
+                .phone(userDto.getPhone())
                 .profileImage(userDto.getProfileImage())
-                .dateOfBirth(userDto.getDateOfBirth())
+                .birth(userDto.getBirth())
                 .nickname(userDto.getNickname())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
                 .build();
 
-        return UserDto.from(userRepository.save(user));
+        userRepository.save(user);
+
+        return new UserCreateResponse(true, "회원 가입 성공");
     }
 
     @Transactional(readOnly = true)

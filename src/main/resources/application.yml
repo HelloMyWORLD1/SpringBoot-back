@@ -11,7 +11,7 @@ spring:
       - application-local.yml # Notion 코드공유 확인
   jpa:
     hibernate:
-      ddl-auto: create-drop # 매번 table 초기화 됨
+      ddl-auto: create # 매번 table 초기화 됨
     properties:
       hibernate:
         format_sql: true

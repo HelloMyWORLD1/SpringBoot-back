@@ -2,13 +2,14 @@ server:
   port: 8001
 
 spring:
-
   h2:
     console:
       enabled: true
   config:
     import:
       - application-local.yml # Notion 코드공유 확인
+#      - application-dev.yml # Notion 코드공유 확인
+
   jpa:
     hibernate:
       ddl-auto: create # 매번 table 초기화 됨
@@ -26,3 +27,10 @@ jwt:
 logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
+
+springdoc:
+  swagger-ui:
+    path: swagger.html
+  version: v1
+  paths-to-match:
+    - /api/**

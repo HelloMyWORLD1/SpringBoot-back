@@ -48,6 +48,8 @@ public class SecurityConfig {
                 , "/favicon.ico"
                 , "/error"
         , "/swagger-ui.html"
+        , "/swagger-ui/**"
+        , "/v3/api-docs/**"
         , "/swagger/**"
         , "/swagger-resources/**");
     }

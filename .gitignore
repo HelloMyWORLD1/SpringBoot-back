@@ -1,4 +1,5 @@
 application-local.yml
+application-jwt.yml
 
 .gradle
 build/

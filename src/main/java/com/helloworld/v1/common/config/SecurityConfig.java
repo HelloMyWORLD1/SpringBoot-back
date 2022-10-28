@@ -5,6 +5,7 @@ import com.helloworld.v1.common.security.jwt.JwtAccessDeniedHandler;
 import com.helloworld.v1.common.security.jwt.JwtAuthenticationEntryPoint;
 import com.helloworld.v1.common.security.jwt.JwtSecurityConfig;
 import com.helloworld.v1.common.security.jwt.TokenProvider;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
@@ -82,6 +83,7 @@ public class SecurityConfig {
                 .antMatchers("/api/hello").permitAll()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/signup").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/portfolio/**").permitAll()
 
                 .anyRequest().authenticated()
 

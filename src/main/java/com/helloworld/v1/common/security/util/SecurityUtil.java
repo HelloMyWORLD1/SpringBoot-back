@@ -1,4 +1,4 @@
-package com.helloworld.v1.util;
+package com.helloworld.v1.common.security.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

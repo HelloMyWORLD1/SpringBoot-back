@@ -1,4 +1,4 @@
-package com.helloworld.v1.filter;
+package com.helloworld.v1.common.security.filter;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

@@ -1,4 +1,4 @@
-package com.helloworld.v1.jwt;
+package com.helloworld.v1.common.security.jwt;
 
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

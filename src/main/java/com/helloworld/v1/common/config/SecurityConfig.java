@@ -1,10 +1,10 @@
 package com.helloworld.v1.common.config;
 
-import com.helloworld.v1.filter.CorsFilter;
-import com.helloworld.v1.jwt.JwtAccessDeniedHandler;
-import com.helloworld.v1.jwt.JwtAuthenticationEntryPoint;
-import com.helloworld.v1.jwt.JwtSecurityConfig;
-import com.helloworld.v1.jwt.TokenProvider;
+import com.helloworld.v1.common.security.filter.CorsFilter;
+import com.helloworld.v1.common.security.jwt.JwtAccessDeniedHandler;
+import com.helloworld.v1.common.security.jwt.JwtAuthenticationEntryPoint;
+import com.helloworld.v1.common.security.jwt.JwtSecurityConfig;
+import com.helloworld.v1.common.security.jwt.TokenProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 

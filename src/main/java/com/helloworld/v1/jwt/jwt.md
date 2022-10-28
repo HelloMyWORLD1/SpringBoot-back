@@ -106,6 +106,7 @@ public class SecurityConfig {
                 .antMatchers("/api/hello").permitAll()
                 .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/api/signup").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
 
                 .anyRequest().authenticated()
 

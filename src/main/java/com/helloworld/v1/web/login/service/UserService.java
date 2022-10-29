@@ -26,7 +26,7 @@ public class UserService {
 
     @Transactional
     public UserCreateResponse signup(UserDto userDto) {
-        if (userRepository.findOneWithAuthoritiesByUsername(userDto.getEmail()).orElse(null) != null) {
+        if (userRepository.findOneByEmail(userDto.getEmail()).orElse(null) != null) {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
         }
 
@@ -50,6 +50,11 @@ public class UserService {
         userRepository.save(user);
 
         return new UserCreateResponse(true, "회원 가입 성공");
+    }
+
+    public String getUsernameWithEmail(String email){
+        UserDto userDto = UserDto.from(userRepository.findOneByEmail(email).orElse(null));
+        return userDto != null ? userDto.getUsername() : null;
     }
 
     @Transactional(readOnly = true)

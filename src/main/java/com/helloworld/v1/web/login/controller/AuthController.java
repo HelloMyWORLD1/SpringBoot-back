@@ -4,6 +4,8 @@ import com.helloworld.v1.jwt.JwtFilter;
 import com.helloworld.v1.jwt.TokenProvider;
 import com.helloworld.v1.web.login.dto.LoginDto;
 import com.helloworld.v1.web.login.dto.TokenDto;
+import com.helloworld.v1.web.login.dto.UserDto;
+import com.helloworld.v1.web.login.service.UserService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,18 +24,21 @@ import javax.validation.Valid;
 @RequestMapping("/api")
 public class AuthController {
     private final TokenProvider tokenProvider;
+
+    private final UserService userService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    public AuthController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
+    public AuthController(TokenProvider tokenProvider, UserService userService, AuthenticationManagerBuilder authenticationManagerBuilder) {
         this.tokenProvider = tokenProvider;
+        this.userService = userService;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
     @PostMapping("/login")
     public ResponseEntity<TokenDto> authorize(@Valid @RequestBody LoginDto loginDto) {
-
+        String username = userService.getUsernameWithEmail(loginDto.getEmail());
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+                new UsernamePasswordAuthenticationToken(username, loginDto.getPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);

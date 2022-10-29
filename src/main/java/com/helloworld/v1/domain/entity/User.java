@@ -3,6 +3,7 @@ package com.helloworld.v1.domain.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -35,13 +36,13 @@ public class User {
     private String field;
 
     @Column(name = "phone")
-    private String phone;
+    private Integer phone;
 
     @Column(name = "profileImage")
     private String profileImage;
 
     @Column(name = "birth")
-    private String birth;
+    private Date birth;
 
     @Column(name = "nickname")
     private String nickname;

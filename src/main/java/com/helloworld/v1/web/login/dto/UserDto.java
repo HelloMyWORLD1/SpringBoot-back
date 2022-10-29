@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.helloworld.v1.domain.entity.User;
 import lombok.*;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
+import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,13 +32,12 @@ public class UserDto {
     private String field;
 
     @NotNull
-    @Size(min=11, message = "휴대전화번호는 11자리 이상이어야 합니다.")
-    private String phone;
+    @Min(value = 1000000000, message = "휴대전화는 10-0000-0000으로 '-'을 제외하고 숫자만 입력해주세요.")
+    private Integer phone;
 
     private String profileImage;
 
-    @Size(min = 8, max = 8, message = "생년월일 정보는 8자리입니다.")
-    private String birth;
+    private Date birth;
 
     private String nickname;
 

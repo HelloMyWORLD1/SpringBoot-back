@@ -1,13 +1,12 @@
 package com.helloworld.v1.web.login.service;
 import java.util.Collections;
-import java.util.Optional;
 
 import com.helloworld.v1.common.exception.DuplicateMemberException;
 import com.helloworld.v1.common.exception.NotFoundMemberException;
 import com.helloworld.v1.domain.entity.Authority;
 import com.helloworld.v1.domain.entity.User;
 import com.helloworld.v1.domain.repository.UserRepository;
-import com.helloworld.v1.util.SecurityUtil;
+import com.helloworld.v1.common.security.util.SecurityUtil;
 import com.helloworld.v1.web.login.dto.UserCreateResponse;
 import com.helloworld.v1.web.login.dto.UserDto;
 import org.springframework.security.crypto.password.PasswordEncoder;

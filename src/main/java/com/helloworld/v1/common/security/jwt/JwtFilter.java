@@ -1,4 +1,4 @@
-package com.helloworld.v1.jwt;
+package com.helloworld.v1.common.security.jwt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,7 +1,7 @@
 package com.helloworld.v1.web.login.controller;
 
-import com.helloworld.v1.jwt.JwtFilter;
-import com.helloworld.v1.jwt.TokenProvider;
+import com.helloworld.v1.common.security.jwt.JwtFilter;
+import com.helloworld.v1.common.security.jwt.TokenProvider;
 import com.helloworld.v1.web.login.dto.LoginDto;
 import com.helloworld.v1.web.login.dto.TokenDto;
 import com.helloworld.v1.web.login.dto.UserDto;

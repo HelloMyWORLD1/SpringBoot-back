@@ -2,6 +2,7 @@ package com.helloworld.v1.web.login.controller;
 
 import com.helloworld.v1.common.security.jwt.JwtFilter;
 import com.helloworld.v1.common.security.jwt.TokenProvider;
+import com.helloworld.v1.web.login.dto.LoginCreateResponse;
 import com.helloworld.v1.web.login.dto.LoginDto;
 import com.helloworld.v1.web.login.dto.TokenDto;
 import com.helloworld.v1.web.login.dto.UserDto;
@@ -23,32 +24,17 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api")
 public class AuthController {
-    private final TokenProvider tokenProvider;
 
     private final UserService userService;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    public AuthController(TokenProvider tokenProvider, UserService userService, AuthenticationManagerBuilder authenticationManagerBuilder) {
-        this.tokenProvider = tokenProvider;
+
+    public AuthController(UserService userService) {
         this.userService = userService;
-        this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> authorize(@Valid @RequestBody LoginDto loginDto) {
-        String username = userService.getUsernameWithEmail(loginDto.getEmail());
+    public ResponseEntity<LoginCreateResponse> authorize(@Valid @RequestBody LoginDto loginDto) {
+        return ResponseEntity.ok(userService.login(loginDto));
 
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(username, loginDto.getPassword());
-
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwt = tokenProvider.createToken(authentication);
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-
-        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
     }
 }

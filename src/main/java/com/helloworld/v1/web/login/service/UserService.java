@@ -3,12 +3,20 @@ import java.util.Collections;
 
 import com.helloworld.v1.common.exception.DuplicateMemberException;
 import com.helloworld.v1.common.exception.NotFoundMemberException;
+import com.helloworld.v1.common.security.jwt.JwtFilter;
+import com.helloworld.v1.common.security.jwt.TokenProvider;
 import com.helloworld.v1.domain.entity.Authority;
 import com.helloworld.v1.domain.entity.User;
 import com.helloworld.v1.domain.repository.UserRepository;
 import com.helloworld.v1.common.security.util.SecurityUtil;
-import com.helloworld.v1.web.login.dto.UserCreateResponse;
-import com.helloworld.v1.web.login.dto.UserDto;
+import com.helloworld.v1.web.login.dto.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +25,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final TokenProvider tokenProvider;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.tokenProvider = tokenProvider;
     }
 
     @Transactional
@@ -68,5 +80,26 @@ public class UserService {
                         .flatMap(userRepository::findOneWithAuthoritiesByUsername)
                         .orElseThrow(() -> new NotFoundMemberException("Member not found"))
         );
+    }
+
+    public LoginCreateResponse login(LoginDto loginDto){
+        String username = getUsernameWithEmail(loginDto.getEmail());
+
+        UserDto userDto = getUserWithAuthorities(username);
+
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(username, loginDto.getPassword());
+
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String jwt = tokenProvider.createToken(authentication);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+
+        ResponseEntity<TokenDto> tokenDtoResponseEntity = new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+
+        return new LoginCreateResponse(true, "로그인 성공", tokenDtoResponseEntity.getBody(), userDto);
     }
 }

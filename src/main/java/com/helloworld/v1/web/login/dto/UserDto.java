@@ -32,12 +32,13 @@ public class UserDto {
     private String field;
 
     @NotNull
-    @Min(value = 1000000000, message = "휴대전화는 10-0000-0000으로 '-'을 제외하고 숫자만 입력해주세요.")
-    private Integer phone;
+    @Size(min = 11)
+    private String phone;
 
     private String profileImage;
 
-    private Date birth;
+    @Size(min = 8, max = 8)
+    private String birth;
 
     private String nickname;
 

@@ -36,13 +36,13 @@ public class User {
     private String field;
 
     @Column(name = "phone")
-    private Integer phone;
+    private String phone;
 
     @Column(name = "profileImage")
     private String profileImage;
 
     @Column(name = "birth")
-    private Date birth;
+    private String birth;
 
     @Column(name = "nickname")
     private String nickname;

@@ -3,7 +3,6 @@ package com.helloworld.v1.domain.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.Set;
 
 @Entity

@@ -1,6 +1,7 @@
 package com.helloworld.v1.domain.repository;
 
 import com.helloworld.v1.domain.entity.User;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,4 +12,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @EntityGraph(attributePaths = "authorities")
     Optional<User> findOneWithAuthoritiesByUsername(String username);
     Optional<User> findOneByEmail(String email);
+
+    Optional<User> findOneByNickname(String nickname);
 }

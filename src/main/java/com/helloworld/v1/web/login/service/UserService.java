@@ -1,8 +1,7 @@
 package com.helloworld.v1.web.login.service;
 import java.util.Collections;
 
-import com.helloworld.v1.common.exception.DuplicateMemberException;
-import com.helloworld.v1.common.exception.NotFoundMemberException;
+import com.helloworld.v1.common.exception.*;
 import com.helloworld.v1.common.security.jwt.JwtFilter;
 import com.helloworld.v1.common.security.jwt.TokenProvider;
 import com.helloworld.v1.domain.entity.Authority;
@@ -38,7 +37,11 @@ public class UserService {
     @Transactional
     public UserCreateResponse signup(UserDto userDto) {
         if (userRepository.findOneByEmail(userDto.getEmail()).orElse(null) != null) {
-            throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
+            throw new ApiException(ExceptionEnum.DUPLICATE_EMAIL);
+        }
+
+        if (userRepository.findOneByNickname(userDto.getNickname()).orElse(null) != null) {
+            throw new ApiException(ExceptionEnum.DUPLICATE_NICKNAME);
         }
 
         Authority authority = Authority.builder()
@@ -78,12 +81,16 @@ public class UserService {
         return UserDto.from(
                 SecurityUtil.getCurrentUsername()
                         .flatMap(userRepository::findOneWithAuthoritiesByUsername)
-                        .orElseThrow(() -> new NotFoundMemberException("Member not found"))
+                        .orElseThrow(() -> new ApiException(ExceptionEnum.NOT_FOUND_MEMBER))
         );
     }
 
     public LoginCreateResponse login(LoginDto loginDto){
         String username = getUsernameWithEmail(loginDto.getEmail());
+
+        if(loginDto.getEmail().isEmpty() || loginDto.getPassword().isEmpty()) {
+            throw new ApiException(ExceptionEnum.MISSING_REQUIRED_ITEMS);
+        }
 
         UserDto userDto = getUserWithAuthorities(username);
 

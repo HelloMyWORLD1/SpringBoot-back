@@ -138,17 +138,13 @@ public class PortfolioService {
 
     public PortfolioGetNicknameResponse getPortfolioByNickname(String nickname) {
         // 닉네임에서 userId 조회
-        /**
-         * 회원 관리 전에 userId = 1L
-         */
-//        Long userId = 1L;
-//        Optional<Portfolio> optionalPortfolio = portfolioRepository.findByUserId(userId);
-//        if (optionalPortfolio.isEmpty()) {
-//            throw new ApiException(ExceptionEnum.NO_SEARCH_RESOURCE);
-//        }
-        Portfolio portfolio = portfolioRepository.findAll().get(0);
+        Optional<User> byNickname = userRepository.findByNickname(nickname);
+        if (byNickname.isEmpty()) {
+            throw new ApiException(ExceptionEnum.NO_SEARCH_RESOURCE);
+        }
+        User user = byNickname.get();
         // 포트폴리오 연관 Entity 조회
-//        Portfolio portfolio = optionalPortfolio.get();
+        Portfolio portfolio = portfolioRepository.findByUserId(user.getUserId()).get();
         Long portfolioId = portfolio.getId();
         List<String> sns = portfolioSnsRepository.findAllByPortfolioId(portfolioId).stream().map(PortfolioSns::getSns).toList();
         List<PortfolioGetNicknameDataTechDto> tech = portfolioTechRepository.findAllByPortfolioId(portfolioId).stream().map(p -> new PortfolioGetNicknameDataTechDto(p.getTechName(), p.getContent())).toList();
@@ -159,8 +155,7 @@ public class PortfolioService {
 
         // Response 생성
         PortfolioGetNicknameDataDto data = new PortfolioGetNicknameDataDto(sns, portfolio.getDetailJob(), portfolio.getTitle(), portfolio.getIntroduce(),
-                "sample", "sample", tech, portfolio.getEducation(), certificate, foreignLanguage, project, career);
+                user.getProfileImage(), user.getField(), tech, portfolio.getEducation(), certificate, foreignLanguage, project, career);
         return new PortfolioGetNicknameResponse(true, "개인 포트폴리오 조회 성공", data);
     }
-
 }

@@ -94,19 +94,17 @@ public class PortfolioService {
     }
 
     public PortfolioGetResponse getPortfolios(String field) {
-        List<User> allByField = userRepository.findAllByField(field);
-        List<Portfolio> portfolios = portfolioRepository.findTop12ByOrderByIdDesc();
+
+        List<Portfolio> portfolios = portfolioRepository.findTop12ByField(field);
+//        List<Portfolio> portfolios = portfolioRepository.findTop12ByOrderByIdDesc();
         List<PortfolioGetDataDto> data = new ArrayList<>();
         for (Portfolio portfolio : portfolios) {
-            String tempNickname = "helloMin";
-            String tempName = "이의현";
-            String tempField = "개발자";
-            String tempProfileImage = "test";
-            data.add(new PortfolioGetDataDto(tempNickname,
+            User user = userRepository.findById(portfolio.getUserId()).get();
+            data.add(new PortfolioGetDataDto(user.getNickname(),
                     portfolio.getDetailJob(),
-                    tempName,
-                    tempField,
-                    tempProfileImage,
+                    user.getUsername(),
+                    field,
+                    user.getProfileImage(),
                     portfolio.getTitle(),
                     new ArrayList<>(),
                     new ArrayList<>()

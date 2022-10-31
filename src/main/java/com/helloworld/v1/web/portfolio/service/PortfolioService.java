@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,11 +32,19 @@ public class PortfolioService {
     private final PortfolioForeignLanguageRepository portfolioForeignLanguageRepository;
     private final PortfolioProjectRepository portfolioProjectRepository;
     private final PortfolioCareerRepository portfolioCareerRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    public PortfolioCreateResponse createPortfolio(PortfolioCreateRequest portfolioCreateRequest) {
+    public PortfolioCreateResponse createPortfolio(PortfolioCreateRequest portfolioCreateRequest, Authentication authentication) {
+        // 작성자
+        String username = authentication.getName();
+        Optional<User> optionalUser = userRepository.findOneWithAuthoritiesByUsername(username);
+        if (optionalUser.isEmpty()) {
+            throw new ApiException(ExceptionEnum.NO_SEARCH_RESOURCE);
+        }
+
         // portfolio 저장
-        Portfolio portfolio = portfolioCreateRequest.toPortfolio(1L);
+        Portfolio portfolio = portfolioCreateRequest.toPortfolio(optionalUser.get().getUserId());
         Long portfolioId = portfolioRepository.save(portfolio).getId();
 
         // tech 저장
@@ -85,10 +94,24 @@ public class PortfolioService {
     }
 
     public PortfolioGetResponse getPortfolios(String field) {
-        /*
-        회원관리 전까지 field가 없으므로 전체 조회
-         */
-        List<PortfolioGetDataDto> data = getPortfolioSamples();
+        List<User> allByField = userRepository.findAllByField(field);
+        List<Portfolio> portfolios = portfolioRepository.findTop12ByOrderByIdDesc();
+        List<PortfolioGetDataDto> data = new ArrayList<>();
+        for (Portfolio portfolio : portfolios) {
+            String tempNickname = "helloMin";
+            String tempName = "이의현";
+            String tempField = "개발자";
+            String tempProfileImage = "test";
+            data.add(new PortfolioGetDataDto(tempNickname,
+                    portfolio.getDetailJob(),
+                    tempName,
+                    tempField,
+                    tempProfileImage,
+                    portfolio.getTitle(),
+                    new ArrayList<>(),
+                    new ArrayList<>()
+            ));
+        }
         return new PortfolioGetResponse(true, "로그인 체크 성공", data);
     }
 

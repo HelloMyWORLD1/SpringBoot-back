@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +23,11 @@ public class PortfolioController {
 
     @Operation(description = "포트폴리오 생성") // Swagger 표시
     @PostMapping("")
-    public ResponseEntity<PortfolioCreateResponse> createPortfolio(@Validated @RequestBody PortfolioCreateRequest portfolioCreateRequest) {
-        return ResponseEntity.ok(portfolioService.createPortfolio(portfolioCreateRequest));
+    public ResponseEntity<PortfolioCreateResponse> createPortfolio(
+            @Validated @RequestBody PortfolioCreateRequest portfolioCreateRequest,
+            Authentication authentication
+    ) {
+        return ResponseEntity.ok(portfolioService.createPortfolio(portfolioCreateRequest, authentication));
     }
 
     @Operation(description = "포트폴리오 받기 (메인페이지) || 현재 전체 portfolio가 반환됨") // Swagger 표시

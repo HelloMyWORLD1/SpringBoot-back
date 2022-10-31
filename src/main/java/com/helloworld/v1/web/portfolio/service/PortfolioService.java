@@ -117,8 +117,22 @@ public class PortfolioService {
         long countNum = portfolioRepository.count();
         Integer size = 20;
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").descending());
-
-        PortfolioGetLatestDataDto data = new PortfolioGetLatestDataDto(countNum, getPortfolioSamples(pageRequest));
+        Page<Portfolio> portfolioPage = portfolioRepository.findAll(pageRequest);
+        List<Portfolio> portfolios = portfolioPage.getContent();
+        List<PortfolioGetDataDto> portfolioGetDataDtos = new ArrayList<>();
+        for (Portfolio portfolio : portfolios) {
+            User user = userRepository.findById(portfolio.getUserId()).get();
+            portfolioGetDataDtos.add(new PortfolioGetDataDto(user.getNickname(),
+                    portfolio.getDetailJob(),
+                    user.getUsername(),
+                    user.getField(),
+                    user.getProfileImage(),
+                    portfolio.getTitle(),
+                    new ArrayList<>(),
+                    new ArrayList<>()
+            ));
+        }
+        PortfolioGetLatestDataDto data = new PortfolioGetLatestDataDto(countNum, portfolioGetDataDtos);
         return new PortfolioGetLatestResponse(true, "페이지에 따른 데이터 가져오기 성공.", data);
     }
 
@@ -149,50 +163,4 @@ public class PortfolioService {
         return new PortfolioGetNicknameResponse(true, "개인 포트폴리오 조회 성공", data);
     }
 
-    /***
-     * 이하 공통 Method
-     */
-
-    private List<PortfolioGetDataDto> getPortfolioSamples() {
-        List<Portfolio> portfolios = portfolioRepository.findTop12ByOrderByIdDesc();
-        List<PortfolioGetDataDto> data = new ArrayList<>();
-        for (Portfolio portfolio : portfolios) {
-            String tempNickname = "helloMin";
-            String tempName = "이의현";
-            String tempField = "개발자";
-            String tempProfileImage = "test";
-            data.add(new PortfolioGetDataDto(tempNickname,
-                    portfolio.getDetailJob(),
-                    tempName,
-                    tempField,
-                    tempProfileImage,
-                    portfolio.getTitle(),
-                    new ArrayList<>(),
-                    new ArrayList<>()
-            ));
-        }
-        return data;
-    }
-
-    private List<PortfolioGetDataDto> getPortfolioSamples(PageRequest pageRequest) {
-        Page<Portfolio> portfolioPage = portfolioRepository.findAll(pageRequest);
-        List<Portfolio> portfolios = portfolioPage.getContent();
-        List<PortfolioGetDataDto> data = new ArrayList<>();
-        for (Portfolio portfolio : portfolios) {
-            String tempNickname = "helloMin";
-            String tempName = "이의현";
-            String tempField = "개발자";
-            String tempProfileImage = "test";
-            data.add(new PortfolioGetDataDto(tempNickname,
-                    portfolio.getDetailJob(),
-                    tempName,
-                    tempField,
-                    tempProfileImage,
-                    portfolio.getTitle(),
-                    new ArrayList<>(),
-                    new ArrayList<>()
-            ));
-        }
-        return data;
-    }
 }

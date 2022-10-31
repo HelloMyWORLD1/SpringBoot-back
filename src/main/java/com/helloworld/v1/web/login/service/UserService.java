@@ -40,7 +40,7 @@ public class UserService {
             throw new ApiException(ExceptionEnum.DUPLICATE_EMAIL);
         }
 
-        if (userRepository.findOneByNickname(userDto.getNickname()).orElse(null) != null) {
+        if (userRepository.findByNickname(userDto.getNickname()).orElse(null) != null) {
             throw new ApiException(ExceptionEnum.DUPLICATE_NICKNAME);
         }
 

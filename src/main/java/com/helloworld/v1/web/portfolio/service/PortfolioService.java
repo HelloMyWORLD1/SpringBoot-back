@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,11 +32,19 @@ public class PortfolioService {
     private final PortfolioForeignLanguageRepository portfolioForeignLanguageRepository;
     private final PortfolioProjectRepository portfolioProjectRepository;
     private final PortfolioCareerRepository portfolioCareerRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    public PortfolioCreateResponse createPortfolio(PortfolioCreateRequest portfolioCreateRequest) {
+    public PortfolioCreateResponse createPortfolio(PortfolioCreateRequest portfolioCreateRequest, Authentication authentication) {
+        // 작성자
+        String username = authentication.getName();
+        Optional<User> optionalUser = userRepository.findOneWithAuthoritiesByUsername(username);
+        if (optionalUser.isEmpty()) {
+            throw new ApiException(ExceptionEnum.NO_SEARCH_RESOURCE);
+        }
+
         // portfolio 저장
-        Portfolio portfolio = portfolioCreateRequest.toPortfolio(1L);
+        Portfolio portfolio = portfolioCreateRequest.toPortfolio(optionalUser.get().getUserId());
         Long portfolioId = portfolioRepository.save(portfolio).getId();
 
         // tech 저장
@@ -85,10 +94,22 @@ public class PortfolioService {
     }
 
     public PortfolioGetResponse getPortfolios(String field) {
-        /*
-        회원관리 전까지 field가 없으므로 전체 조회
-         */
-        List<PortfolioGetDataDto> data = getPortfolioSamples();
+
+        List<Portfolio> portfolios = portfolioRepository.findTop12ByField(field);
+//        List<Portfolio> portfolios = portfolioRepository.findTop12ByOrderByIdDesc();
+        List<PortfolioGetDataDto> data = new ArrayList<>();
+        for (Portfolio portfolio : portfolios) {
+            User user = userRepository.findById(portfolio.getUserId()).get();
+            data.add(new PortfolioGetDataDto(user.getNickname(),
+                    portfolio.getDetailJob(),
+                    user.getUsername(),
+                    field,
+                    user.getProfileImage(),
+                    portfolio.getTitle(),
+                    new ArrayList<>(),
+                    new ArrayList<>()
+            ));
+        }
         return new PortfolioGetResponse(true, "로그인 체크 성공", data);
     }
 
@@ -96,24 +117,34 @@ public class PortfolioService {
         long countNum = portfolioRepository.count();
         Integer size = 20;
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").descending());
-
-        PortfolioGetLatestDataDto data = new PortfolioGetLatestDataDto(countNum, getPortfolioSamples(pageRequest));
+        Page<Portfolio> portfolioPage = portfolioRepository.findAll(pageRequest);
+        List<Portfolio> portfolios = portfolioPage.getContent();
+        List<PortfolioGetDataDto> portfolioGetDataDtos = new ArrayList<>();
+        for (Portfolio portfolio : portfolios) {
+            User user = userRepository.findById(portfolio.getUserId()).get();
+            portfolioGetDataDtos.add(new PortfolioGetDataDto(user.getNickname(),
+                    portfolio.getDetailJob(),
+                    user.getUsername(),
+                    user.getField(),
+                    user.getProfileImage(),
+                    portfolio.getTitle(),
+                    new ArrayList<>(),
+                    new ArrayList<>()
+            ));
+        }
+        PortfolioGetLatestDataDto data = new PortfolioGetLatestDataDto(countNum, portfolioGetDataDtos);
         return new PortfolioGetLatestResponse(true, "페이지에 따른 데이터 가져오기 성공.", data);
     }
 
     public PortfolioGetNicknameResponse getPortfolioByNickname(String nickname) {
         // 닉네임에서 userId 조회
-        /**
-         * 회원 관리 전에 userId = 1L
-         */
-//        Long userId = 1L;
-//        Optional<Portfolio> optionalPortfolio = portfolioRepository.findByUserId(userId);
-//        if (optionalPortfolio.isEmpty()) {
-//            throw new ApiException(ExceptionEnum.NO_SEARCH_RESOURCE);
-//        }
-        Portfolio portfolio = portfolioRepository.findAll().get(0);
+        Optional<User> byNickname = userRepository.findByNickname(nickname);
+        if (byNickname.isEmpty()) {
+            throw new ApiException(ExceptionEnum.NO_SEARCH_RESOURCE);
+        }
+        User user = byNickname.get();
         // 포트폴리오 연관 Entity 조회
-//        Portfolio portfolio = optionalPortfolio.get();
+        Portfolio portfolio = portfolioRepository.findByUserId(user.getUserId()).get();
         Long portfolioId = portfolio.getId();
         List<String> sns = portfolioSnsRepository.findAllByPortfolioId(portfolioId).stream().map(PortfolioSns::getSns).toList();
         List<PortfolioGetNicknameDataTechDto> tech = portfolioTechRepository.findAllByPortfolioId(portfolioId).stream().map(p -> new PortfolioGetNicknameDataTechDto(p.getTechName(), p.getContent())).toList();
@@ -124,54 +155,7 @@ public class PortfolioService {
 
         // Response 생성
         PortfolioGetNicknameDataDto data = new PortfolioGetNicknameDataDto(sns, portfolio.getDetailJob(), portfolio.getTitle(), portfolio.getIntroduce(),
-                "sample", "sample", tech, portfolio.getEducation(), certificate, foreignLanguage, project, career);
+                user.getProfileImage(), user.getField(), tech, portfolio.getEducation(), certificate, foreignLanguage, project, career);
         return new PortfolioGetNicknameResponse(true, "개인 포트폴리오 조회 성공", data);
-    }
-
-    /***
-     * 이하 공통 Method
-     */
-
-    private List<PortfolioGetDataDto> getPortfolioSamples() {
-        List<Portfolio> portfolios = portfolioRepository.findTop12ByOrderByIdDesc();
-        List<PortfolioGetDataDto> data = new ArrayList<>();
-        for (Portfolio portfolio : portfolios) {
-            String tempNickname = "helloMin";
-            String tempName = "이의현";
-            String tempField = "개발자";
-            String tempProfileImage = "test";
-            data.add(new PortfolioGetDataDto(tempNickname,
-                    portfolio.getDetailJob(),
-                    tempName,
-                    tempField,
-                    tempProfileImage,
-                    portfolio.getTitle(),
-                    new ArrayList<>(),
-                    new ArrayList<>()
-            ));
-        }
-        return data;
-    }
-
-    private List<PortfolioGetDataDto> getPortfolioSamples(PageRequest pageRequest) {
-        Page<Portfolio> portfolioPage = portfolioRepository.findAll(pageRequest);
-        List<Portfolio> portfolios = portfolioPage.getContent();
-        List<PortfolioGetDataDto> data = new ArrayList<>();
-        for (Portfolio portfolio : portfolios) {
-            String tempNickname = "helloMin";
-            String tempName = "이의현";
-            String tempField = "개발자";
-            String tempProfileImage = "test";
-            data.add(new PortfolioGetDataDto(tempNickname,
-                    portfolio.getDetailJob(),
-                    tempName,
-                    tempField,
-                    tempProfileImage,
-                    portfolio.getTitle(),
-                    new ArrayList<>(),
-                    new ArrayList<>()
-            ));
-        }
-        return data;
     }
 }

@@ -53,6 +53,7 @@ public class UserDto {
         return UserDto.builder()
                 .email(user.getEmail())
                 .username(user.getUsername())
+                .password(user.getPassword())
                 .field(user.getField())
                 .phone(user.getPhone())
                 .profileImage(user.getProfileImage())

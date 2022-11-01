@@ -1,5 +1,7 @@
 package com.helloworld.v1.web.login.service;
 import java.util.Collections;
+import java.util.Objects;
+import java.util.Optional;
 
 import com.helloworld.v1.common.exception.*;
 import com.helloworld.v1.common.security.jwt.JwtFilter;
@@ -92,6 +94,10 @@ public class UserService {
             throw new ApiException(ExceptionEnum.MISSING_REQUIRED_ITEMS);
         }
 
+        if(userRepository.findOneWithAuthoritiesByUsername(username).isEmpty()){
+            throw new ApiException(ExceptionEnum.NOT_FOUND_EMAIL);
+        }
+
         UserDto userDto = getUserWithAuthorities(username);
 
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -106,6 +112,10 @@ public class UserService {
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
         ResponseEntity<TokenDto> tokenDtoResponseEntity = new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+
+        if (tokenDtoResponseEntity.getBody().getToken().isEmpty()) {
+            throw new ApiException(ExceptionEnum.TOKEN_EMPTY);
+        }
 
         return new LoginCreateResponse(true, "로그인 성공", tokenDtoResponseEntity.getBody(), userDto);
     }

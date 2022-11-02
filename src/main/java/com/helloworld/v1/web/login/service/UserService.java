@@ -64,6 +64,7 @@ public class UserService {
                 .build();
 
         userRepository.save(user);
+        user.setUsername(user.getUsername() + "#" + user.getUserId());
 
         return new UserCreateResponse(true, "회원 가입 성공");
     }

@@ -22,6 +22,7 @@ public enum ExceptionEnum {
     NO_TARGET_NAME(HttpStatus.UNAUTHORIZED, "C0002", "대상의 이름이 없습니다."), // 401
     NOT_MATCH_NAME(HttpStatus.FORBIDDEN, "C0003", "권한이 없습니다. (허가되지 않은 사용자)"), // 403
     ALREADY_PROCESSED(HttpStatus.BAD_REQUEST, "C0004", "이미 처리된 요청입니다."), // 400
+    NOT_FOUND_FOLLOW(HttpStatus.NOT_FOUND, "C0005", "팔로우 기록이 없습니다."), // 404
 
     /**
      * 공통 에러

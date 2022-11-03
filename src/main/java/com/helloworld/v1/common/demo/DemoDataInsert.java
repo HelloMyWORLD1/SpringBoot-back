@@ -98,5 +98,23 @@ public class DemoDataInsert implements CommandLineRunner {
                 new PortfolioCareer("2022년-", "**회사", "업무2", portfolioId)
         );
         portfolioCareerRepository.saveAll(portfolioCareers);
+
+        /**
+         * Demo 2
+         */
+        // user 저장
+        User user2 = User.builder()
+                .email("abc2@abc.com")
+                .password(passwordEncoder.encode("1234qwer!@#"))
+                .username("이의현2")
+                .field("개발자")
+                .phone("01012242672")
+                .profileImage("/~")
+                .birth("19970419")
+                .nickname("xx__sara2")
+                .authorities(Collections.singleton(new Authority("ROLE_USER")))
+                .activated(true)
+                .build();
+        User savedUser2 = userRepository.save(user2);
     }
 }

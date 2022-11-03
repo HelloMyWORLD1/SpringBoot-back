@@ -4,6 +4,8 @@ import com.helloworld.v1.web.portfolio.dto.PortfolioCreateRequest;
 import com.helloworld.v1.web.portfolio.dto.PortfolioCreateResponse;
 import com.helloworld.v1.web.social.dto.SocialFollowRequest;
 import com.helloworld.v1.web.social.dto.SocialFollowResponse;
+import com.helloworld.v1.web.social.dto.SocialUnfollowRequest;
+import com.helloworld.v1.web.social.dto.SocialUnfollowResponse;
 import com.helloworld.v1.web.social.service.SocialService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,5 +32,14 @@ public class SocialController {
             Authentication authentication
     ) {
         return ResponseEntity.ok(socialService.followUser(socialFollowRequest, authentication));
+    }
+
+    @Operation(description = "User 팔로우")
+    @PostMapping("/unfollow")
+    public ResponseEntity<SocialUnfollowResponse> unfollowUser(
+            @Validated @RequestBody SocialUnfollowRequest socialUnfollowRequest,
+            Authentication authentication
+    ) {
+        return ResponseEntity.ok(socialService.unfollowUser(socialUnfollowRequest, authentication));
     }
 }

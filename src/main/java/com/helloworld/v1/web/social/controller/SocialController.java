@@ -34,7 +34,7 @@ public class SocialController {
         return ResponseEntity.ok(socialService.followUser(socialFollowRequest, authentication));
     }
 
-    @Operation(description = "User 팔로우")
+    @Operation(description = "User 언팔로우")
     @PostMapping("/unfollow")
     public ResponseEntity<SocialUnfollowResponse> unfollowUser(
             @Validated @RequestBody SocialUnfollowRequest socialUnfollowRequest,

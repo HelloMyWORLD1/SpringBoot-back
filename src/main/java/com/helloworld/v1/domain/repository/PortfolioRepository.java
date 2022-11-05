@@ -17,7 +17,7 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
     @Query(value = "select * from Portfolio as p " +
             "RIGHT JOIN User as u " +
             "ON p.user_id = u.user_id " +
-            "WHERE u.field = :field " +
+            "WHERE u.field = :field AND p.id IS NOT NULL " +
             "ORDER BY p.id DESC " +
             "LIMIT 12"
             , nativeQuery = true)

@@ -94,9 +94,7 @@ public class PortfolioService {
     }
 
     public PortfolioGetResponse getPortfolios(String field) {
-
         List<Portfolio> portfolios = portfolioRepository.findTop12ByField(field);
-//        List<Portfolio> portfolios = portfolioRepository.findTop12ByOrderByIdDesc();
         List<PortfolioGetDataDto> data = new ArrayList<>();
         for (Portfolio portfolio : portfolios) {
             User user = userRepository.findById(portfolio.getUserId()).get();
@@ -106,6 +104,7 @@ public class PortfolioService {
                     field,
                     user.getProfileImage(),
                     portfolio.getTitle(),
+                    portfolio.getIntroduce(),
                     new ArrayList<>(),
                     new ArrayList<>()
             ));
@@ -128,6 +127,7 @@ public class PortfolioService {
                     user.getField(),
                     user.getProfileImage(),
                     portfolio.getTitle(),
+                    portfolio.getIntroduce(),
                     new ArrayList<>(),
                     new ArrayList<>()
             ));

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,6 +34,7 @@ public class PortfolioService {
     private final PortfolioProjectRepository portfolioProjectRepository;
     private final PortfolioCareerRepository portfolioCareerRepository;
     private final UserRepository userRepository;
+    private final UserFollowRepository userFollowRepository;
 
     @Transactional
     public PortfolioCreateResponse createPortfolio(PortfolioCreateRequest portfolioCreateRequest, Authentication authentication) {
@@ -105,8 +107,12 @@ public class PortfolioService {
                     user.getProfileImage(),
                     portfolio.getTitle(),
                     portfolio.getIntroduce(),
-                    new ArrayList<>(),
-                    new ArrayList<>()
+                    userFollowRepository.findAllByUserId(user.getUserId()).stream()
+                            .map(u -> userRepository.findById(u.getFollowingId()).get().getNickname())
+                            .distinct().collect(Collectors.toList()),
+                    userFollowRepository.findAllByFollowingId(user.getUserId()).stream()
+                            .map(u -> userRepository.findById(u.getUserId()).get().getNickname())
+                            .distinct().collect(Collectors.toList())
             ));
         }
         return new PortfolioGetResponse(true, "로그인 체크 성공", data);
@@ -128,8 +134,12 @@ public class PortfolioService {
                     user.getProfileImage(),
                     portfolio.getTitle(),
                     portfolio.getIntroduce(),
-                    new ArrayList<>(),
-                    new ArrayList<>()
+                    userFollowRepository.findAllByUserId(user.getUserId()).stream()
+                            .map(u -> userRepository.findById(u.getFollowingId()).get().getNickname())
+                            .distinct().collect(Collectors.toList()),
+                    userFollowRepository.findAllByFollowingId(user.getUserId()).stream()
+                            .map(u -> userRepository.findById(u.getUserId()).get().getNickname())
+                            .distinct().collect(Collectors.toList())
             ));
         }
         PortfolioGetLatestDataDto data = new PortfolioGetLatestDataDto(countNum, portfolioGetDataDtos);
@@ -140,7 +150,7 @@ public class PortfolioService {
         // 닉네임에서 userId 조회
         Optional<User> byNickname = userRepository.findByNickname(nickname);
         if (byNickname.isEmpty()) {
-            throw new ApiException(ExceptionEnum.NO_SEARCH_RESOURCE);
+            throw new ApiException(ExceptionEnum.NOT_FOUND_NICKNAME);
         }
         User user = byNickname.get();
         // 포트폴리오 연관 Entity 조회
@@ -155,7 +165,13 @@ public class PortfolioService {
 
         // Response 생성
         PortfolioGetNicknameDataDto data = new PortfolioGetNicknameDataDto(sns, portfolio.getDetailJob(), portfolio.getTitle(), portfolio.getIntroduce(),
-                user.getProfileImage(), user.getField(), tech, portfolio.getEducation(), certificate, foreignLanguage, project, career);
+                user.getProfileImage(), user.getField(), tech, portfolio.getEducation(), certificate, foreignLanguage, project, career,
+                userFollowRepository.findAllByUserId(user.getUserId()).stream()
+                        .map(u -> userRepository.findById(u.getFollowingId()).get().getNickname())
+                        .distinct().collect(Collectors.toList()),
+                userFollowRepository.findAllByFollowingId(user.getUserId()).stream()
+                        .map(u -> userRepository.findById(u.getUserId()).get().getNickname())
+                        .distinct().collect(Collectors.toList()));
         return new PortfolioGetNicknameResponse(true, "개인 포트폴리오 조회 성공", data);
     }
 }

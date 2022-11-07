@@ -118,12 +118,12 @@ public class PortfolioService {
         return new PortfolioGetResponse(true, "로그인 체크 성공", data);
     }
 
-    public PortfolioGetLatestResponse getPortfoliosLatest(Integer page) {
-        long countNum = portfolioRepository.count();
-        Integer size = 20;
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").descending());
-        Page<Portfolio> portfolioPage = portfolioRepository.findAll(pageRequest);
+    public PortfolioGetLatestResponse getPortfoliosLatest(Integer page, String field) {
+        Integer size = 2;
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Portfolio> portfolioPage = portfolioRepository.findPageByField(field, pageRequest);
         List<Portfolio> portfolios = portfolioPage.getContent();
+        long totalElements = portfolioPage.getTotalElements();
         List<PortfolioGetDataDto> portfolioGetDataDtos = new ArrayList<>();
         for (Portfolio portfolio : portfolios) {
             User user = userRepository.findById(portfolio.getUserId()).get();
@@ -142,7 +142,7 @@ public class PortfolioService {
                             .distinct().collect(Collectors.toList())
             ));
         }
-        PortfolioGetLatestDataDto data = new PortfolioGetLatestDataDto(countNum, portfolioGetDataDtos);
+        PortfolioGetLatestDataDto data = new PortfolioGetLatestDataDto(totalElements, portfolioGetDataDtos);
         return new PortfolioGetLatestResponse(true, "페이지에 따른 데이터 가져오기 성공.", data);
     }
 

@@ -17,8 +17,7 @@ public class PortfolioGetDataDto {
     private String field;
     private String profileImage;
     private String title;
+    private String introduce;
     private List<String> followers = new ArrayList<>();
     private List<String> followings = new ArrayList<>();
-
-
 }

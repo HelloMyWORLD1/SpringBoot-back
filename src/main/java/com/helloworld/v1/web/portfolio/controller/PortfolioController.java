@@ -36,10 +36,12 @@ public class PortfolioController {
         return ResponseEntity.ok(portfolioService.getPortfolios(field));
     }
 
-    @Operation(description = "포트폴리오 받기 (메인페이지) OFFSET 20") // Swagger 표시
-    @GetMapping("/latest")
-    public ResponseEntity<PortfolioGetLatestResponse> getPortfoliosLatest(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page) {
-        return ResponseEntity.ok(portfolioService.getPortfoliosLatest(page));
+    @Operation(description = "포트폴리오 받기 OFFSET 20") // Swagger 표시
+    @GetMapping("/{field}/latest")
+    public ResponseEntity<PortfolioGetLatestResponse> getPortfoliosLatest(
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @PathVariable("field") String field) {
+        return ResponseEntity.ok(portfolioService.getPortfoliosLatest(page, field));
     }
 
     @Operation(description = "개인 포트폴리오") // Swagger 표시

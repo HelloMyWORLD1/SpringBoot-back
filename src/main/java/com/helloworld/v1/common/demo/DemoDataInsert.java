@@ -2,13 +2,9 @@ package com.helloworld.v1.common.demo;
 
 import com.helloworld.v1.domain.entity.*;
 import com.helloworld.v1.domain.repository.*;
-import com.helloworld.v1.web.portfolio.dto.PortfolioCareerDto;
-import com.helloworld.v1.web.portfolio.dto.PortfolioProjectDto;
-import com.helloworld.v1.web.portfolio.dto.PortfolioTechDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +26,7 @@ public class DemoDataInsert implements CommandLineRunner {
     private final PortfolioForeignLanguageRepository portfolioForeignLanguageRepository;
     private final PortfolioProjectRepository portfolioProjectRepository;
     private final PortfolioCareerRepository portfolioCareerRepository;
-
+    private final UserFollowRepository userFollowRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -116,5 +112,10 @@ public class DemoDataInsert implements CommandLineRunner {
                 .activated(true)
                 .build();
         User savedUser2 = userRepository.save(user2);
+
+        UserFollow userFollow1 = new UserFollow(savedUser.getUserId(), savedUser2.getUserId());
+        UserFollow userFollow2 = new UserFollow(savedUser2.getUserId(), savedUser.getUserId());
+        userFollowRepository.save(userFollow1);
+        userFollowRepository.save(userFollow2);
     }
 }

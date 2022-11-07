@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class PortfolioController {
     private final PortfolioService portfolioService;
 
-    @Operation(description = "포트폴리오 생성") // Swagger 표시
+    @Operation(summary = "P4", description = "포트폴리오 생성") // Swagger 표시
     @PostMapping("")
     public ResponseEntity<PortfolioCreateResponse> createPortfolio(
             @Validated @RequestBody PortfolioCreateRequest portfolioCreateRequest,
@@ -30,13 +30,13 @@ public class PortfolioController {
         return ResponseEntity.ok(portfolioService.createPortfolio(portfolioCreateRequest, authentication));
     }
 
-    @Operation(description = "포트폴리오 받기 (메인페이지) 12개") // Swagger 표시
+    @Operation(summary = "P1", description = "포트폴리오 받기 (메인페이지) 12개") // Swagger 표시
     @GetMapping("/{field}/like")
     public ResponseEntity<PortfolioGetResponse> getPortfolios(@PathVariable("field") String field) {
         return ResponseEntity.ok(portfolioService.getPortfolios(field));
     }
 
-    @Operation(description = "포트폴리오 받기 OFFSET 20") // Swagger 표시
+    @Operation(summary = "P2", description = "포트폴리오 받기 OFFSET 20") // Swagger 표시
     @GetMapping("/{field}/latest")
     public ResponseEntity<PortfolioGetLatestResponse> getPortfoliosLatest(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
@@ -44,7 +44,7 @@ public class PortfolioController {
         return ResponseEntity.ok(portfolioService.getPortfoliosLatest(page, field));
     }
 
-    @Operation(description = "개인 포트폴리오") // Swagger 표시
+    @Operation(summary = "P3", description = "개인 포트폴리오") // Swagger 표시
     @GetMapping("/{nickname}")
     public ResponseEntity<PortfolioGetNicknameResponse> getPortfolioByNickname(@PathVariable("nickname") String nickname) {
         return ResponseEntity.ok(portfolioService.getPortfolioByNickname(nickname));

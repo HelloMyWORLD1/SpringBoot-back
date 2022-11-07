@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SocialController {
     private final SocialService socialService;
 
-    @Operation(description = "User 팔로우")
+    @Operation(summary = "S1", description = "User 팔로우")
     @PostMapping("/follow")
     public ResponseEntity<SocialFollowResponse> followUser(
             @Validated @RequestBody SocialFollowRequest socialFollowRequest,
@@ -34,7 +34,7 @@ public class SocialController {
         return ResponseEntity.ok(socialService.followUser(socialFollowRequest, authentication));
     }
 
-    @Operation(description = "User 언팔로우")
+    @Operation(summary = "S2", description = "User 언팔로우")
     @PostMapping("/unfollow")
     public ResponseEntity<SocialUnfollowResponse> unfollowUser(
             @Validated @RequestBody SocialUnfollowRequest socialUnfollowRequest,

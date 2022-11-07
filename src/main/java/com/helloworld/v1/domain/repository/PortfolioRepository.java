@@ -35,7 +35,7 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
             "LEFT OUTER JOIN user_follow as uf " +
             "ON p.user_id = uf.following_id " +
             "WHERE u.field = :field AND p.id IS NOT NULL " +
-            "GROUP BY uf.following_id " +
+            "GROUP BY p.id, p.detail_job, p.education, p.introduce, p.title, p.user_id, u.field, uf.following_id " +
             "ORDER BY cnt DESC " +
             "LIMIT 12"
             , nativeQuery = true)

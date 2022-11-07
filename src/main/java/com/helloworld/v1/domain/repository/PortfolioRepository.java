@@ -14,8 +14,8 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
     Optional<Portfolio> findByUserId(Long userId);
     List<Portfolio> findTop12ByOrderByIdDesc();
 
-    @Query(value = "select * from Portfolio as p " +
-            "RIGHT JOIN User as u " +
+    @Query(value = "select * from portfolio as p " +
+            "RIGHT JOIN user as u " +
             "ON p.user_id = u.user_id " +
             "WHERE u.field = :field AND p.id IS NOT NULL " +
             "ORDER BY p.id DESC " +

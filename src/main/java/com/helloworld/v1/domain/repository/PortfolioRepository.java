@@ -28,11 +28,15 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
     )
     Page<Portfolio> findPageByField(@Param("field") String field, Pageable pageable);
 
-    @Query(value = "select * from portfolio as p " +
+    @Query(value = "select p.id, p.detail_job, p.education, p.introduce, p.title, p.user_id, u.field, count(uf.user_id) as cnt " +
+            "from portfolio as p " +
             "RIGHT JOIN user as u " +
             "ON p.user_id = u.user_id " +
+            "LEFT OUTER JOIN user_follow as uf " +
+            "ON p.user_id = uf.following_id " +
             "WHERE u.field = :field AND p.id IS NOT NULL " +
-            "ORDER BY p.id DESC " +
+            "GROUP BY uf.following_id " +
+            "ORDER BY cnt DESC " +
             "LIMIT 12"
             , nativeQuery = true)
     List<Portfolio> findTop12ByField(@Param("field") String field);

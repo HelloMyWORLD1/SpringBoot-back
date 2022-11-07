@@ -119,7 +119,7 @@ public class PortfolioService {
     }
 
     public PortfolioGetLatestResponse getPortfoliosLatest(Integer page, String field) {
-        Integer size = 2;
+        Integer size = 20;
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Portfolio> portfolioPage = portfolioRepository.findPageByField(field, pageRequest);
         List<Portfolio> portfolios = portfolioPage.getContent();

@@ -1,4 +1,4 @@
-package com.helloworld.v1.web.login.dto;
+package com.helloworld.v1.web.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.helloworld.v1.domain.entity.User;

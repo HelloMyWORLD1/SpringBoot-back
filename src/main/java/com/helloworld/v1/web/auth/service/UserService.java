@@ -1,7 +1,5 @@
-package com.helloworld.v1.web.login.service;
+package com.helloworld.v1.web.auth.service;
 import java.util.Collections;
-import java.util.Objects;
-import java.util.Optional;
 
 import com.helloworld.v1.common.exception.*;
 import com.helloworld.v1.common.security.jwt.JwtFilter;
@@ -10,7 +8,9 @@ import com.helloworld.v1.domain.entity.Authority;
 import com.helloworld.v1.domain.entity.User;
 import com.helloworld.v1.domain.repository.UserRepository;
 import com.helloworld.v1.common.security.util.SecurityUtil;
-import com.helloworld.v1.web.login.dto.*;
+import com.helloworld.v1.web.auth.dto.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,19 +22,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
-
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManagerBuilder = authenticationManagerBuilder;
-        this.tokenProvider = tokenProvider;
-    }
 
     @Transactional
     public UserCreateResponse signup(UserDto userDto) {
@@ -62,7 +58,6 @@ public class UserService {
                 .authorities(Collections.singleton(authority))
                 .activated(true)
                 .build();
-
         userRepository.save(user);
         user.setUsername(user.getUsername() + "#" + user.getUserId());
 
@@ -74,12 +69,10 @@ public class UserService {
         return userDto != null ? userDto.getUsername() : null;
     }
 
-    @Transactional(readOnly = true)
     public UserDto getUserWithAuthorities(String username) {
         return UserDto.from(userRepository.findOneWithAuthoritiesByUsername(username).orElse(null));
     }
 
-    @Transactional(readOnly = true)
     public UserDto getMyUserWithAuthorities() {
         return UserDto.from(
                 SecurityUtil.getCurrentUsername()

@@ -1,4 +1,4 @@
-package com.helloworld.v1.web.login.dto;
+package com.helloworld.v1.web.auth.dto;
 
 import java.util.ArrayList;
 import java.util.List;

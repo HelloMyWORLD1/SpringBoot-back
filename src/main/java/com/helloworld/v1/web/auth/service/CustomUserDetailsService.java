@@ -1,4 +1,4 @@
-package com.helloworld.v1.web.login.service;
+package com.helloworld.v1.web.auth.service;
 
 import com.helloworld.v1.domain.entity.User;
 import com.helloworld.v1.domain.repository.UserRepository;

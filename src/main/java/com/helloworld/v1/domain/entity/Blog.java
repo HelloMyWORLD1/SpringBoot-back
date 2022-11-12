@@ -25,4 +25,9 @@ public class Blog {
         this.content = content;
         this.userId = userId;
     }
+
+    public void updateBlog(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }

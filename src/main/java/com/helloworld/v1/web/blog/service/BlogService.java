@@ -6,9 +6,7 @@ import com.helloworld.v1.domain.entity.Blog;
 import com.helloworld.v1.domain.entity.User;
 import com.helloworld.v1.domain.repository.BlogRepository;
 import com.helloworld.v1.domain.repository.UserRepository;
-import com.helloworld.v1.web.blog.dto.BlogCreateRequest;
-import com.helloworld.v1.web.blog.dto.BlogCreateResponse;
-import com.helloworld.v1.web.blog.dto.BlogDeleteResponse;
+import com.helloworld.v1.web.blog.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -48,6 +46,17 @@ public class BlogService {
         return new BlogDeleteResponse(true, "게시글 삭제 완료");
     }
 
+    @Transactional
+    public BlogUpdateResponse updateBlog(BlogUpdateRequest blogUpdateRequest, Long blogId, Authentication authentication) {
+        User user = getUserFromAuthentication(authentication, userRepository);
+        Blog blog = blogRepository.findById(blogId).orElseThrow(
+                () -> new ApiException(ExceptionEnum.NOT_FOUND_BLOG));
+        if (!blog.getUserId().equals(user.getUserId())) {
+            throw new ApiException(ExceptionEnum.NOT_MATCH_NAME);
+        }
+        blog.updateBlog(blogUpdateRequest.getTitle(), blogUpdateRequest.getContent());
+        return new BlogUpdateResponse(true, "게시글 수정 성공");
+    }
 
     /**
      * 공통 Method
@@ -62,4 +71,6 @@ public class BlogService {
         }
         return optionalUser.get();
     }
+
+
 }

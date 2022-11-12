@@ -8,6 +8,7 @@ import com.helloworld.v1.domain.repository.BlogRepository;
 import com.helloworld.v1.domain.repository.UserRepository;
 import com.helloworld.v1.web.blog.dto.BlogCreateRequest;
 import com.helloworld.v1.web.blog.dto.BlogCreateResponse;
+import com.helloworld.v1.web.blog.dto.BlogDeleteResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -26,15 +27,39 @@ public class BlogService {
 
     @Transactional
     public BlogCreateResponse createBlog(BlogCreateRequest blogCreateRequest, Authentication authentication) {
-        // 작성자
+        User user = getUserFromAuthentication(authentication, userRepository);
+        Blog blog = blogCreateRequest.toEntity(user.getUserId());
+        blogRepository.save(blog);
+        return new  BlogCreateResponse(true, "블로그 글 등록 성공");
+    }
+
+
+    @Transactional
+    public BlogDeleteResponse deleteBlog(Long blogId, Authentication authentication) {
+        User user = getUserFromAuthentication(authentication, userRepository);
+        Optional<Blog> optionalBlog = blogRepository.findById(blogId);
+        if (optionalBlog.isEmpty()) {
+            throw new ApiException(ExceptionEnum.NOT_FOUND_BLOG);
+        }
+        if (!user.getUserId().equals(optionalBlog.get().getUserId())) {
+            throw new ApiException(ExceptionEnum.NOT_MATCH_NAME); // 권한없음
+        }
+        blogRepository.delete(optionalBlog.get());
+        return new BlogDeleteResponse(true, "게시글 삭제 완료");
+    }
+
+
+    /**
+     * 공통 Method
+     * Authentication 에서 User 반환
+     * User 없으면 에러
+     */
+    private User getUserFromAuthentication(Authentication authentication, UserRepository userRepository) {
         String username = authentication.getName();
         Optional<User> optionalUser = userRepository.findOneWithAuthoritiesByUsername(username);
         if (optionalUser.isEmpty()) {
             throw new ApiException(ExceptionEnum.NOT_FOUND_USER_BY_TOKEN);
         }
-        // 글 등록
-        Blog blog = blogCreateRequest.toEntity(optionalUser.get().getUserId());
-        blogRepository.save(blog);
-        return new  BlogCreateResponse(true, "블로그 글 등록 성공");
+        return optionalUser.get();
     }
 }

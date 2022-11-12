@@ -42,4 +42,10 @@ public class BlogController {
             Authentication authentication) {
         return ResponseEntity.ok(blogService.updateBlog(blogUpdateRequest, blogId, authentication));
     }
+
+    @Operation(summary = "B4", description = "블로그 글 상세 조회") // Swagger 표시
+    @GetMapping("/{blogId}")
+    public ResponseEntity<BlogGetResponse> getBlog(@PathVariable("blogId") Long blogId) {
+        return ResponseEntity.ok(blogService.getBlog(blogId));
+    }
 }

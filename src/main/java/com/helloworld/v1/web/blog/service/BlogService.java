@@ -58,6 +58,14 @@ public class BlogService {
         return new BlogUpdateResponse(true, "게시글 수정 성공");
     }
 
+    public BlogGetResponse getBlog(Long blogId) {
+        Blog blog = blogRepository.findById(blogId).orElseThrow(
+                () -> new ApiException(ExceptionEnum.NOT_FOUND_BLOG));
+        BlogGetDto blogGetDto = new BlogGetDto(blogId, blog.getTitle(), blog.getContent());
+        return new BlogGetResponse(true, "게시글 조회 성공", blogGetDto);
+    }
+
+
     /**
      * 공통 Method
      * Authentication 에서 User 반환
@@ -71,6 +79,7 @@ public class BlogService {
         }
         return optionalUser.get();
     }
+
 
 
 }

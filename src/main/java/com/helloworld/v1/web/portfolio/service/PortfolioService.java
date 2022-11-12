@@ -42,7 +42,7 @@ public class PortfolioService {
         String username = authentication.getName();
         Optional<User> optionalUser = userRepository.findOneWithAuthoritiesByUsername(username);
         if (optionalUser.isEmpty()) {
-            throw new ApiException(ExceptionEnum.NO_SEARCH_RESOURCE);
+            throw new ApiException(ExceptionEnum.NOT_FOUND_USER_BY_TOKEN);
         }
 
         // portfolio 저장

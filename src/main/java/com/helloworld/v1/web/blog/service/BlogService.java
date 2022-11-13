@@ -9,11 +9,15 @@ import com.helloworld.v1.domain.repository.UserRepository;
 import com.helloworld.v1.web.blog.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -65,6 +69,17 @@ public class BlogService {
         return new BlogGetResponse(true, "게시글 조회 성공", blogGetDto);
     }
 
+    public BlogGetAllResponse getBlogs(Integer page, String nickname) {
+        Integer size = 5;
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Blog> blogPage = blogRepository.findPageByNickname(nickname, pageRequest);
+        List<Blog> blogs = blogPage.getContent();
+        long totalElements = blogPage.getTotalElements();
+        List<BlogGetAllDataBlogDto> blogDtos = blogs.stream().map(b -> new BlogGetAllDataBlogDto(b.getId(), b.getTitle(), b.getContent(), b.getCreatedAt()))
+                .distinct().collect(Collectors.toList());
+        BlogGetAllDataDto blogGetAllDataDto = new BlogGetAllDataDto(totalElements, blogDtos);
+        return new BlogGetAllResponse(true, "유저 블로그 게시물 조회 성공", blogGetAllDataDto);
+    }
 
     /**
      * 공통 Method
@@ -79,7 +94,4 @@ public class BlogService {
         }
         return optionalUser.get();
     }
-
-
-
 }

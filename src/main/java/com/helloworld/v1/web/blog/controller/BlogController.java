@@ -56,4 +56,12 @@ public class BlogController {
             @PathVariable("nickname") String nickname) {
         return ResponseEntity.ok(blogService.getBlogs(page, nickname));
     }
+
+    @Operation(summary = "B6", description = "블로그 글 검색") // Swagger 표시
+    @GetMapping("/blogs/search")
+    public ResponseEntity<BlogGetSearchResponse> getBlogSearch(
+            @RequestParam(value = "nickname", required = false, defaultValue = "") String nickname,
+            @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword) {
+        return ResponseEntity.ok(blogService.getBlogSearch(nickname, keyword));
+    }
 }

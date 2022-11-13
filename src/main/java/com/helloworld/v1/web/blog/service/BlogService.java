@@ -75,10 +75,19 @@ public class BlogService {
         Page<Blog> blogPage = blogRepository.findPageByNickname(nickname, pageRequest);
         List<Blog> blogs = blogPage.getContent();
         long totalElements = blogPage.getTotalElements();
-        List<BlogGetAllDataBlogDto> blogDtos = blogs.stream().map(b -> new BlogGetAllDataBlogDto(b.getId(), b.getTitle(), b.getContent(), b.getCreatedAt()))
+        List<BlogGetAllDataBlogDto> blogDtos = blogs.stream()
+                .map(b -> new BlogGetAllDataBlogDto(b.getId(), b.getTitle(), b.getContent(), b.getCreatedAt()))
                 .distinct().collect(Collectors.toList());
         BlogGetAllDataDto blogGetAllDataDto = new BlogGetAllDataDto(totalElements, blogDtos);
         return new BlogGetAllResponse(true, "유저 블로그 게시물 조회 성공", blogGetAllDataDto);
+    }
+
+    public BlogGetSearchResponse getBlogSearch(String nickname, String keyword) {
+        List<Blog> blogs = blogRepository.findAllByNicknameAndKeyword(nickname, keyword);
+        List<BlogGetSearchDto> blogGetSearchDtos = blogs.stream()
+                .map(b -> new BlogGetSearchDto(b.getId(), b.getContent(), b.getCreatedAt()))
+                .distinct().collect(Collectors.toList());
+        return new BlogGetSearchResponse(true, "조회 성공", blogGetSearchDtos);
     }
 
     /**

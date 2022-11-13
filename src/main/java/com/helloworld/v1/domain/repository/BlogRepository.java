@@ -27,4 +27,12 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
             nativeQuery = true
     )
     Page<Blog> findPageByNickname(@Param("nickname") String nickname, Pageable pageable);
+
+    @Query(value = "SELECT * FROM blog as b " +
+            "RIGHT JOIN user as u " +
+            "ON b.user_id = u.user_id " +
+            "WHERE u.nickname = :nickname AND (b.title LIKE %:keyword% OR b.content LIKE %:keyword%)",
+            nativeQuery = true
+    )
+    List<Blog> findAllByNicknameAndKeyword(@Param("nickname") String nickname, @Param("keyword") String keyword);
 }

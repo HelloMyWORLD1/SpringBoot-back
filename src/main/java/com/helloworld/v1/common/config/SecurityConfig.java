@@ -80,10 +80,11 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/hello").permitAll()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/signup").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/portfolio/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/blog/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/blogs/**").permitAll()
 
                 .anyRequest().authenticated()
 

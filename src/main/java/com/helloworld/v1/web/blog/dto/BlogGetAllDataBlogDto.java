@@ -12,4 +12,5 @@ public class BlogGetAllDataBlogDto {
     private String title;
     private String content;
     private String createdAt;
+    private String blogUserImg;
 }

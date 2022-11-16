@@ -65,7 +65,8 @@ public class BlogService {
     public BlogGetResponse getBlog(Long blogId) {
         Blog blog = blogRepository.findById(blogId).orElseThrow(
                 () -> new ApiException(ExceptionEnum.NOT_FOUND_BLOG));
-        BlogGetDto blogGetDto = new BlogGetDto(blogId, blog.getTitle(), blog.getContent());
+        User user = userRepository.findById(blog.getUserId()).get();
+        BlogGetDto blogGetDto = new BlogGetDto(blogId, blog.getTitle(), blog.getContent(), user.getNickname(), user.getProfileImage(), blog.getCreatedAt());
         return new BlogGetResponse(true, "게시글 조회 성공", blogGetDto);
     }
 
@@ -73,10 +74,12 @@ public class BlogService {
         Integer size = 5;
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Blog> blogPage = blogRepository.findPageByNickname(nickname, pageRequest);
+        User user = userRepository.findByNickname(nickname).orElseThrow(
+                () -> new ApiException(ExceptionEnum.NOT_FOUND_NICKNAME));
         List<Blog> blogs = blogPage.getContent();
         long totalElements = blogPage.getTotalElements();
         List<BlogGetAllDataBlogDto> blogDtos = blogs.stream()
-                .map(b -> new BlogGetAllDataBlogDto(b.getId(), b.getTitle(), b.getContent(), b.getCreatedAt()))
+                .map(b -> new BlogGetAllDataBlogDto(b.getId(), b.getTitle(), b.getContent(), b.getCreatedAt(), user.getProfileImage()))
                 .distinct().collect(Collectors.toList());
         BlogGetAllDataDto blogGetAllDataDto = new BlogGetAllDataDto(totalElements, blogDtos);
         return new BlogGetAllResponse(true, "유저 블로그 게시물 조회 성공", blogGetAllDataDto);

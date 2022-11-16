@@ -11,4 +11,7 @@ public class BlogGetDto {
     private Long blogId;
     private String title;
     private String content;
+    private String blogUser;
+    private String blogUserImg;
+    private String createdAt;
 }

@@ -58,5 +58,16 @@ public class CommentService {
         return new CommentDeleteResponse(true, "댓글 삭제 완료");
     }
 
-
+    @Transactional
+    public CommentUpdateResponse updateComment(Long blogId, Long commentId, CommentUpdateRequest commentUpdateRequest, Authentication authentication) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new ApiException(ExceptionEnum.NOT_FOUND_COMMENT));
+        User user = userRepository.findByNickname(authentication.getName()).orElseThrow(
+                () -> new ApiException(ExceptionEnum.NOT_FOUND_USER_BY_TOKEN));
+        if (!user.getUserId().equals(comment.getUserId())) {
+            throw new ApiException(ExceptionEnum.NOT_MATCH_NAME);
+        }
+        comment.updateComment(commentUpdateRequest.getContent());
+        return new CommentUpdateResponse(true, "댓글 수정 성공");
+    }
 }

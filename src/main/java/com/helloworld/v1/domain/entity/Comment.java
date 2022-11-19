@@ -29,4 +29,8 @@ public class Comment {
         this.blogId = blogId;
         this.userId = userId;
     }
+
+    public void updateComment(String content) {
+        this.content = content;
+    }
 }

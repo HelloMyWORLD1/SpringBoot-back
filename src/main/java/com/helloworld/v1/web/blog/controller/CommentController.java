@@ -2,10 +2,7 @@ package com.helloworld.v1.web.blog.controller;
 
 import com.helloworld.v1.web.blog.dto.BlogCreateRequest;
 import com.helloworld.v1.web.blog.dto.BlogCreateResponse;
-import com.helloworld.v1.web.blog.dto.comment.CommentCreateRequest;
-import com.helloworld.v1.web.blog.dto.comment.CommentCreateResponse;
-import com.helloworld.v1.web.blog.dto.comment.CommentDeleteResponse;
-import com.helloworld.v1.web.blog.dto.comment.CommentGetResponse;
+import com.helloworld.v1.web.blog.dto.comment.*;
 import com.helloworld.v1.web.blog.service.BlogService;
 import com.helloworld.v1.web.blog.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,5 +47,16 @@ public class CommentController {
             Authentication authentication
     ) {
         return ResponseEntity.ok(commentService.deleteComment(blogId, commentId, authentication));
+    }
+
+    @Operation(summary = "C4", description = "블로그에 댓글 수정") // Swagger 표시
+    @PutMapping("/blog/{blogId}/comment/{commentId}")
+    public ResponseEntity<CommentUpdateResponse> updateComment(
+            @PathVariable("blogId") Long blogId,
+            @PathVariable("commentId") Long commentId,
+            @Validated @RequestBody CommentUpdateRequest commentUpdateRequest,
+            Authentication authentication
+    ) {
+        return ResponseEntity.ok(commentService.updateComment(blogId, commentId, commentUpdateRequest, authentication));
     }
 }

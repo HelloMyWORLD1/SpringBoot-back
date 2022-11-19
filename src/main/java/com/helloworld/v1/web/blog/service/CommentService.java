@@ -7,13 +7,14 @@ import com.helloworld.v1.domain.entity.User;
 import com.helloworld.v1.domain.repository.BlogRepository;
 import com.helloworld.v1.domain.repository.CommentRepository;
 import com.helloworld.v1.domain.repository.UserRepository;
-import com.helloworld.v1.web.blog.dto.comment.CommentCreateRequest;
-import com.helloworld.v1.web.blog.dto.comment.CommentCreateResponse;
+import com.helloworld.v1.web.blog.dto.comment.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -32,4 +33,17 @@ public class CommentService {
         commentRepository.save(comment);
         return new CommentCreateResponse(true, "댓글 등록 성공");
     }
+
+    public CommentGetResponse getComments(Long blogId) {
+        List<Comment> comments = commentRepository.findAllByBlogId(blogId);
+        List<CommentGetDataCommentsDto> commentGetDataCommentsDtos = comments.stream()
+                .map(c -> {
+                    User user = userRepository.findById(c.getUserId()).get();
+                    return new CommentGetDataCommentsDto(c.getId(), user.getNickname(), user.getProfileImage(), c.getContent(), c.getCreatedAt());
+                }).toList();
+        CommentGetDataDto commentGetDataDto = new CommentGetDataDto((long) commentGetDataCommentsDtos.size(), commentGetDataCommentsDtos);
+        return new CommentGetResponse(true, "댓글 조회 성공", commentGetDataDto);
+    }
+
+
 }

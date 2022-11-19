@@ -4,6 +4,7 @@ import com.helloworld.v1.web.blog.dto.BlogCreateRequest;
 import com.helloworld.v1.web.blog.dto.BlogCreateResponse;
 import com.helloworld.v1.web.blog.dto.comment.CommentCreateRequest;
 import com.helloworld.v1.web.blog.dto.comment.CommentCreateResponse;
+import com.helloworld.v1.web.blog.dto.comment.CommentGetResponse;
 import com.helloworld.v1.web.blog.service.BlogService;
 import com.helloworld.v1.web.blog.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,5 +31,13 @@ public class CommentController {
             Authentication authentication
     ) {
         return ResponseEntity.ok(commentService.createComment(blogId, commentCreateRequest, authentication));
+    }
+
+    @Operation(summary = "C2", description = "블로그에 댓글 조회") // Swagger 표시
+    @GetMapping("/blog/{blogId}/comments")
+    public ResponseEntity<CommentGetResponse> getComments(
+            @PathVariable("blogId") Long blogId
+    ) {
+        return ResponseEntity.ok(commentService.getComments(blogId));
     }
 }

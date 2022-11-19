@@ -4,6 +4,7 @@ import com.helloworld.v1.web.blog.dto.BlogCreateRequest;
 import com.helloworld.v1.web.blog.dto.BlogCreateResponse;
 import com.helloworld.v1.web.blog.dto.comment.CommentCreateRequest;
 import com.helloworld.v1.web.blog.dto.comment.CommentCreateResponse;
+import com.helloworld.v1.web.blog.dto.comment.CommentDeleteResponse;
 import com.helloworld.v1.web.blog.dto.comment.CommentGetResponse;
 import com.helloworld.v1.web.blog.service.BlogService;
 import com.helloworld.v1.web.blog.service.CommentService;
@@ -39,5 +40,15 @@ public class CommentController {
             @PathVariable("blogId") Long blogId
     ) {
         return ResponseEntity.ok(commentService.getComments(blogId));
+    }
+
+    @Operation(summary = "C3", description = "블로그에 댓글 삭제") // Swagger 표시
+    @DeleteMapping("/blog/{blogId}/comment/{commentId}")
+    public ResponseEntity<CommentDeleteResponse> deleteComment(
+            @PathVariable("blogId") Long blogId,
+            @PathVariable("commentId") Long commentId,
+            Authentication authentication
+    ) {
+        return ResponseEntity.ok(commentService.deleteComment(blogId, commentId, authentication));
     }
 }

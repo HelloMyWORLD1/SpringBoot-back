@@ -45,5 +45,13 @@ public class CommentService {
         return new CommentGetResponse(true, "댓글 조회 성공", commentGetDataDto);
     }
 
+    @Transactional
+    public CommentDeleteResponse deleteComment(Long blogId, Long commentId, Authentication authentication) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new ApiException(ExceptionEnum.NOT_FOUND_COMMENT));
+        commentRepository.delete(comment);
+        return new CommentDeleteResponse(true, "댓글 삭제 완료");
+    }
+
 
 }

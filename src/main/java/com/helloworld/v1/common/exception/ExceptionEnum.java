@@ -25,6 +25,7 @@ public enum ExceptionEnum {
     NOT_FOUND_FOLLOW(HttpStatus.NOT_FOUND, "C0005", "팔로우 기록이 없습니다."), // 404
     NOT_FOUND_USER_BY_TOKEN(HttpStatus.NOT_FOUND, "C0006", "정상적인 TOKEN USER가 아닙니다."), // 404
     NOT_FOUND_BLOG(HttpStatus.NOT_FOUND, "C0007", "블로그를 찾을 수 없습니다."), // 404
+    NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "C0008", "댓글을 찾을 수 없습니다."), // 404
 
     /**
      * 공통 에러

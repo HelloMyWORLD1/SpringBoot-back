@@ -49,6 +49,11 @@ public class CommentService {
     public CommentDeleteResponse deleteComment(Long blogId, Long commentId, Authentication authentication) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new ApiException(ExceptionEnum.NOT_FOUND_COMMENT));
+        User user = userRepository.findByNickname(authentication.getName()).orElseThrow(
+                () -> new ApiException(ExceptionEnum.NOT_FOUND_USER_BY_TOKEN));
+        if (!user.getUserId().equals(comment.getUserId())) {
+            throw new ApiException(ExceptionEnum.NOT_MATCH_NAME);
+        }
         commentRepository.delete(comment);
         return new CommentDeleteResponse(true, "댓글 삭제 완료");
     }

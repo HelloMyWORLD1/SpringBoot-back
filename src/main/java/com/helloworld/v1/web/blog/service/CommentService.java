@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -27,8 +28,10 @@ public class CommentService {
 
     @Transactional
     public CommentCreateResponse createComment(Long blogId, CommentCreateRequest commentCreateRequest, Authentication authentication) {
-        User user = userRepository.findByNickname(authentication.getName()).orElseThrow(
-                () -> new ApiException(ExceptionEnum.NOT_FOUND_USER_BY_TOKEN));
+        if (!blogRepository.existsById(blogId)) {
+            throw new ApiException(ExceptionEnum.NOT_FOUND_BLOG);
+        }
+        User user = getUserFromAuthentication(authentication, userRepository);
         Comment comment = commentCreateRequest.toEntity(blogId, user.getUserId());
         commentRepository.save(comment);
         return new CommentCreateResponse(true, "댓글 등록 성공");
@@ -47,10 +50,12 @@ public class CommentService {
 
     @Transactional
     public CommentDeleteResponse deleteComment(Long blogId, Long commentId, Authentication authentication) {
+        if (!blogRepository.existsById(blogId)) {
+            throw new ApiException(ExceptionEnum.NOT_FOUND_BLOG);
+        }
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new ApiException(ExceptionEnum.NOT_FOUND_COMMENT));
-        User user = userRepository.findByNickname(authentication.getName()).orElseThrow(
-                () -> new ApiException(ExceptionEnum.NOT_FOUND_USER_BY_TOKEN));
+        User user = getUserFromAuthentication(authentication, userRepository);
         if (!user.getUserId().equals(comment.getUserId())) {
             throw new ApiException(ExceptionEnum.NOT_MATCH_NAME);
         }
@@ -60,14 +65,30 @@ public class CommentService {
 
     @Transactional
     public CommentUpdateResponse updateComment(Long blogId, Long commentId, CommentUpdateRequest commentUpdateRequest, Authentication authentication) {
+        if (!blogRepository.existsById(blogId)) {
+            throw new ApiException(ExceptionEnum.NOT_FOUND_BLOG);
+        }
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new ApiException(ExceptionEnum.NOT_FOUND_COMMENT));
-        User user = userRepository.findByNickname(authentication.getName()).orElseThrow(
-                () -> new ApiException(ExceptionEnum.NOT_FOUND_USER_BY_TOKEN));
+        User user = getUserFromAuthentication(authentication, userRepository);
         if (!user.getUserId().equals(comment.getUserId())) {
             throw new ApiException(ExceptionEnum.NOT_MATCH_NAME);
         }
         comment.updateComment(commentUpdateRequest.getContent());
         return new CommentUpdateResponse(true, "댓글 수정 성공");
+    }
+
+    /**
+     * 공통 Method
+     * Authentication 에서 User 반환
+     * User 없으면 에러
+     */
+    private User getUserFromAuthentication(Authentication authentication, UserRepository userRepository) {
+        String username = authentication.getName();
+        Optional<User> optionalUser = userRepository.findOneWithAuthoritiesByUsername(username);
+        if (optionalUser.isEmpty()) {
+            throw new ApiException(ExceptionEnum.NOT_FOUND_USER_BY_TOKEN);
+        }
+        return optionalUser.get();
     }
 }

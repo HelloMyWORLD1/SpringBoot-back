@@ -1,13 +1,13 @@
 package com.helloworld.v1.web.auth.service;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import com.helloworld.v1.common.exception.*;
 import com.helloworld.v1.common.security.jwt.JwtFilter;
 import com.helloworld.v1.common.security.jwt.TokenProvider;
-import com.helloworld.v1.domain.entity.Authority;
-import com.helloworld.v1.domain.entity.User;
-import com.helloworld.v1.domain.repository.UserRepository;
+import com.helloworld.v1.domain.entity.*;
+import com.helloworld.v1.domain.repository.*;
 import com.helloworld.v1.common.security.util.SecurityUtil;
 import com.helloworld.v1.web.auth.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +29,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PortfolioRepository portfolioRepository;
+    private final PortfolioCareerRepository portfolioCareerRepository;
+    private final PortfolioSnsRepository portfolioSnsRepository;
+    private final PortfolioForeignLanguageRepository portfolioForeignLanguageRepository;
+    private final PortfolioTechRepository portfolioTechRepository;
+    private final PortfolioCertificateRepository portfolioCertificateRepository;
+    private final PortfolioProjectRepository portfolioProjectRepository;
+    private final BlogRepository blogRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
@@ -120,7 +128,42 @@ public class UserService {
         User findUser = SecurityUtil.getCurrentUsername()
                 .flatMap(userRepository::findOneWithAuthoritiesByUsername)
                 .orElseThrow(() -> new ApiException(ExceptionEnum.NOT_FOUND_MEMBER));
+        Portfolio findPortfolio = portfolioRepository.findByUserId(findUser.getUserId()).orElseThrow(() -> new ApiException(ExceptionEnum.NOT_FOUND_MEMBER));
+        Long portfolioId = findPortfolio.getId();
+        List<Blog> BlogAllByUserId = blogRepository.findAllByUserId(findUser.getUserId());
+
+        List<PortfolioCareer> careerAllByPortfolioId = portfolioCareerRepository.findAllByPortfolioId(portfolioId);
+        List<PortfolioSns> snsAllByPortfolioId = portfolioSnsRepository.findAllByPortfolioId(portfolioId);
+        List<PortfolioForeignLanguage> LanguageAllByPortfolioId = portfolioForeignLanguageRepository.findAllByPortfolioId(portfolioId);
+        List<PortfolioTech> techAllByPortfolioId = portfolioTechRepository.findAllByPortfolioId(portfolioId);
+        List<PortfolioCertificate> CertificateAllByPortfolioId = portfolioCertificateRepository.findAllByPortfolioId(portfolioId);
+        List<PortfolioProject> projectAllByPortfolioId = portfolioProjectRepository.findAllByPortfolioId(portfolioId);
+
+
         userRepository.delete(findUser);
+        portfolioRepository.delete(findPortfolio);
+        for (Blog blog : BlogAllByUserId) {
+            blogRepository.delete(blog);
+        }
+        for (PortfolioCareer portfolioCareer : careerAllByPortfolioId) {
+            portfolioCareerRepository.delete(portfolioCareer);
+        }
+        for (PortfolioSns portfolioSns : snsAllByPortfolioId) {
+            portfolioSnsRepository.delete(portfolioSns);
+        }
+        for (PortfolioForeignLanguage portfolioForeignLanguage : LanguageAllByPortfolioId) {
+            portfolioForeignLanguageRepository.delete(portfolioForeignLanguage);
+        }
+        for (PortfolioTech portfolioTech : techAllByPortfolioId) {
+            portfolioTechRepository.delete(portfolioTech);
+        }
+        for (PortfolioCertificate portfolioCertificate : CertificateAllByPortfolioId) {
+            portfolioCertificateRepository.delete(portfolioCertificate);
+        }
+        for (PortfolioProject portfolioProject : projectAllByPortfolioId) {
+            portfolioProjectRepository.delete(portfolioProject);
+        }
+
         return new DeleteUserResponse(true, "계정 삭제 완료");
     }
 

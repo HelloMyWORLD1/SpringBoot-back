@@ -1,5 +1,6 @@
 application-local.yml
 application-dev.yml
+application-dev2.yml
 application-jwt.yml
 
 .gradle

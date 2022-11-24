@@ -39,6 +39,11 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	//파일 확장자 가져오는 라이브러리 추가
+	implementation 'commons-io:commons-io:2.6'
+
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.348'
 }
 
 tasks.named('test') {

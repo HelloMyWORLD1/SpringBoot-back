@@ -13,7 +13,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create # 매번 table 초기화 됨
+      ddl-auto: none # none 하려면 초기데이터 삭제해야함
     properties:
       hibernate:
         format_sql: true

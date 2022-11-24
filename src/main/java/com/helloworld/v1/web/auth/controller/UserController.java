@@ -1,7 +1,6 @@
 package com.helloworld.v1.web.auth.controller;
 
-import com.helloworld.v1.web.auth.dto.UserCreateResponse;
-import com.helloworld.v1.web.auth.dto.UserDto;
+import com.helloworld.v1.web.auth.dto.*;
 import com.helloworld.v1.web.auth.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,9 +34,19 @@ public class UserController {
         return ResponseEntity.ok(userService.getMyUserWithAuthorities());
     }
 
-//    @GetMapping("/user/{username}")
-//    @PreAuthorize("hasAnyRole('ADMIN')")
-//    public ResponseEntity<UserDto> getUserInfo(@PathVariable String username) {
-//        return ResponseEntity.ok(userService.getUserWithAuthorities(username));
-//    }
+
+    @Operation(summary = "U7", description = "계정 삭제")
+    @DeleteMapping("/user")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<DeleteUserResponse> deleteUser(){
+        return ResponseEntity.ok(userService.deleteUser());
+    }
+
+    @Operation(summary = "U8", description = "개인정보 수정")
+    @PutMapping("/user")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<UpdateUserResponse> updateUser(UpdateUserRequest updateUserRequest){
+        return ResponseEntity.ok(userService.updateUser(updateUserRequest));
+    }
+
 }

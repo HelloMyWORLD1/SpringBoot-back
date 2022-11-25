@@ -61,7 +61,7 @@ public class UserService {
                 .username(userDto.getUsername())
                 .field(userDto.getField())
                 .phone(userDto.getPhone())
-                .profileImage(userDto.getProfileImage())
+                .profileImage("https://helloworld4204.s3.ap-northeast-2.amazonaws.com/default.png")
                 .birth(userDto.getBirth())
                 .nickname(userDto.getNickname())
                 .authorities(Collections.singleton(authority))

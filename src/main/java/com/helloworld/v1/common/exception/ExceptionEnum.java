@@ -39,7 +39,8 @@ public enum ExceptionEnum {
     NOT_MATCH_PASSWORD(HttpStatus.BAD_REQUEST, "E005", "비밀번호가 틀렸습니다."), // 401
     NOT_FOUND_PAGE(HttpStatus.NOT_FOUND, "E006", "해당 페이지를 찾을 수 없습니다."), // 404
     NOT_FOUND_NICKNAME(HttpStatus.NOT_FOUND, "E007", "Nickname을 찾을 수 없습니다."), // 404
-    DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "E009", "닉네임이 중복됩니다.");
+    DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "E009", "닉네임이 중복됩니다."),
+    NOT_MATCH_EXT(HttpStatus.BAD_REQUEST, "E010", "확장자 명은 jpg, jpeg, img 이어야 합니다");
 
 
     private final HttpStatus status;

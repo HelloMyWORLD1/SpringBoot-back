@@ -34,6 +34,11 @@ public class S3Upload {
         amazonS3.putObject(bucket, s3FileName, multipartFile.getInputStream(), objMeta);
         String URI = amazonS3.getUrl(bucket, s3FileName).toString();
 
+        String ext = URI.substring(URI.lastIndexOf(".") + 1);
+        if (!ext.equals("png") && !ext.equals("jpg") && !ext.equals("jpeg")){
+            throw new ApiException(ExceptionEnum.NOT_MATCH_EXT);
+        }
+
         User findUser = SecurityUtil.getCurrentUsername()
                 .flatMap(userRepository::findOneWithAuthoritiesByUsername)
                 .orElseThrow(() -> new ApiException(ExceptionEnum.NOT_FOUND_MEMBER));
@@ -50,6 +55,11 @@ public class S3Upload {
         String s3FileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
         ObjectMetadata objMeta = new ObjectMetadata();
         objMeta.setContentLength(multipartFile.getInputStream().available());
+
+        String ext = s3FileName.substring(s3FileName.lastIndexOf(".") + 1);
+        if (!ext.equals("png") && !ext.equals("jpg") && !ext.equals("jpeg")){
+            throw new ApiException(ExceptionEnum.NOT_MATCH_EXT);
+        }
 
         amazonS3.putObject(bucket, s3FileName, multipartFile.getInputStream(), objMeta);
         String URI = amazonS3.getUrl(bucket, s3FileName).toString();

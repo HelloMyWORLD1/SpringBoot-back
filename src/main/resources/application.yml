@@ -2,6 +2,11 @@ server:
   port: 8001
 
 spring:
+  spring:
+    servlet:
+      multipart:
+        max-file-size: 2MB
+        max-request-size: 2MB  # 프로필 이미지 용량 최대 2MB로 제한
   h2:
     console:
       enabled: true

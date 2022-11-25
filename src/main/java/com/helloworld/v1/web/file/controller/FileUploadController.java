@@ -1,30 +1,40 @@
 package com.helloworld.v1.web.file.controller;
 
+import com.helloworld.v1.web.file.dto.FileUpdateResponse;
 import com.helloworld.v1.web.file.dto.FileUploadResponse;
 import com.helloworld.v1.web.file.service.FileService;
-import com.helloworld.v1.web.file.service.S3Upload;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+@Tag(name = "Profile_Image")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
 public class FileUploadController {
 
     private final FileService fileService;
-    private final S3Upload s3Upload;
 
-    @PostMapping("/upload")
+    @Operation(summary = "I1", description = "프로필 이미지 생성") // Swagger 표시
+    @PostMapping("/profileImage/upload")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<FileUploadResponse> uploadFile(@RequestParam("images") MultipartFile multipartFile) throws IOException {
         return ResponseEntity.ok(
                 fileService.upload(multipartFile));
     }
+
+    @Operation(summary = "I2", description = "프로필 이미지 업데이트") // Swagger 표시
+    @PostMapping("/profileImage/update")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<FileUpdateResponse> updateFile(@RequestParam("images") MultipartFile multipartFile) throws IOException {
+        return ResponseEntity.ok(
+                fileService.update(multipartFile));
+    }
+
 }

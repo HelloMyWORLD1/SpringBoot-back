@@ -1,5 +1,6 @@
 package com.helloworld.v1.web.file.service;
 
+import com.helloworld.v1.web.file.dto.FileUpdateResponse;
 import com.helloworld.v1.web.file.dto.FileUploadResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +17,15 @@ import java.io.IOException;
 public class FileService {
     private final S3Upload s3Upload;
 
+    @Transactional
     public FileUploadResponse upload(MultipartFile multipartFile) throws IOException {
         String fileUrl = s3Upload.upload(multipartFile);
-        return new FileUploadResponse(true, "파일 업로드 성공", fileUrl);
+        return new FileUploadResponse(true, "프로필 업로드 성공", fileUrl);
     }
 
+    @Transactional
+    public FileUpdateResponse update(MultipartFile multipartFile) throws IOException {
+        String fileUrl = s3Upload.update(multipartFile);
+        return new FileUpdateResponse(true, "프로필 업데이트 성공", fileUrl);
+    }
 }

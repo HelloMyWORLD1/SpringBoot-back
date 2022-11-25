@@ -59,4 +59,11 @@ public class S3Upload {
         findUser.setProfileImage(URI);
         return URI;
     }
+
+    public String getProfileImage() {
+        User findUser = SecurityUtil.getCurrentUsername()
+                .flatMap(userRepository::findOneWithAuthoritiesByUsername)
+                .orElseThrow(() -> new ApiException(ExceptionEnum.NOT_FOUND_MEMBER));
+        return findUser.getProfileImage();
+    }
 }

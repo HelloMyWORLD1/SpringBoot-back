@@ -1,5 +1,6 @@
 package com.helloworld.v1.web.file.controller;
 
+import com.helloworld.v1.web.file.dto.FileGetResponse;
 import com.helloworld.v1.web.file.dto.FileUpdateResponse;
 import com.helloworld.v1.web.file.dto.FileUploadResponse;
 import com.helloworld.v1.web.file.service.FileService;
@@ -37,4 +38,11 @@ public class FileUploadController {
                 fileService.update(multipartFile));
     }
 
+    @Operation(summary = "I3", description = "프로필 이미지 조회") // Swagger 표시
+    @GetMapping("/profileImage")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<FileGetResponse> getProfileImage() {
+        return ResponseEntity.ok(
+                fileService.getProfileImage());
+    }
 }

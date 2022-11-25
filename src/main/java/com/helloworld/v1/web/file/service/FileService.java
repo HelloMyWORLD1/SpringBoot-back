@@ -1,5 +1,6 @@
 package com.helloworld.v1.web.file.service;
 
+import com.helloworld.v1.web.file.dto.FileGetResponse;
 import com.helloworld.v1.web.file.dto.FileUpdateResponse;
 import com.helloworld.v1.web.file.dto.FileUploadResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +28,10 @@ public class FileService {
     public FileUpdateResponse update(MultipartFile multipartFile) throws IOException {
         String fileUrl = s3Upload.update(multipartFile);
         return new FileUpdateResponse(true, "프로필 업데이트 성공", fileUrl);
+    }
+
+    public FileGetResponse getProfileImage() {
+        String profileImageUrl = s3Upload.getProfileImage();
+        return new FileGetResponse(true, "프로필 이미지 조회 성공", profileImageUrl);
     }
 }

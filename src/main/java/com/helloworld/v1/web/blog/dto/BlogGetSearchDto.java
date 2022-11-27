@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class BlogGetSearchDto {
     private Long blogId;
     private String title;
+    private String content;
     private String createdAt;
 }

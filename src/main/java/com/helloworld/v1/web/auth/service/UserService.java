@@ -196,4 +196,12 @@ public class UserService {
 
         return new UpdateUserResponse(true, "개인 정보 수정이 완료 되었습니다");
     }
+
+    public GetUserByNicknameResponse getUserByNickname(String nickname) {
+        User findUser = userRepository.findByNickname(nickname).orElseThrow(() -> new ApiException(ExceptionEnum.NOT_FOUND_NICKNAME));
+        String profileUrl = findUser.getProfileImage();
+        String username = findUser.getUsername();
+        return new GetUserByNicknameResponse(true, "닉네임을 통한 회원 정보 조회 성공", profileUrl, username);
+
+    }
 }

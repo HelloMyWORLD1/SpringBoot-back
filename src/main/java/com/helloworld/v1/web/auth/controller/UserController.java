@@ -27,7 +27,7 @@ public class UserController {
         return ResponseEntity.ok(userService.signup(userDto));
     }
 
-    @Operation(summary = "U6", description = "로그인한 사용자 개인정보 조회")
+    @Operation(summary = "U4", description = "로그인한 사용자 개인정보 조회")
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<UserDto> getMyUserInfo() {
@@ -35,18 +35,26 @@ public class UserController {
     }
 
 
-    @Operation(summary = "U7", description = "계정 삭제")
+    @Operation(summary = "U5", description = "계정 삭제")
     @DeleteMapping("/user")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<DeleteUserResponse> deleteUser(){
         return ResponseEntity.ok(userService.deleteUser());
     }
 
-    @Operation(summary = "U8", description = "개인정보 수정")
+    @Operation(summary = "U6", description = "개인정보 수정")
     @PutMapping("/user")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<UpdateUserResponse> updateUser(UpdateUserRequest updateUserRequest){
         return ResponseEntity.ok(userService.updateUser(updateUserRequest));
     }
 
+    @Operation(summary = "U7", description = "닉네임을 통한 회원 정보 조회")
+    @GetMapping("/user/nickname")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<GetUserByNicknameResponse> getUserByNickname(
+            @RequestParam(value = "nickname", required = false, defaultValue = "") String nickname
+    ){
+        return ResponseEntity.ok(userService.getUserByNickname(nickname));
+    }
 }

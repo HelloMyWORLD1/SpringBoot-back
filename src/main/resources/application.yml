@@ -18,7 +18,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update # none 하려면 초기데이터 삭제해야함
+      ddl-auto: create # none 하려면 초기데이터 삭제해야함
     properties:
       hibernate:
         format_sql: true

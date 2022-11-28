@@ -174,4 +174,27 @@ public class PortfolioService {
                         .distinct().collect(Collectors.toList()));
         return new PortfolioGetNicknameResponse(true, "개인 포트폴리오 조회 성공", data);
     }
+
+    @Transactional
+    public PortfolioDeleteResponse deletePortfolio(Long portfolioId) {
+        if (!portfolioRepository.existsById(portfolioId)) {
+            throw new ApiException(ExceptionEnum.NO_SEARCH_RESOURCE);
+        }
+
+        List<PortfolioCareer> portfolioCareers = portfolioCareerRepository.findAllByPortfolioId(portfolioId);
+        portfolioCareerRepository.deleteAll(portfolioCareers);
+        List<PortfolioCertificate> portfolioCertificates = portfolioCertificateRepository.findAllByPortfolioId(portfolioId);
+        portfolioCertificateRepository.deleteAll(portfolioCertificates);
+        List<PortfolioForeignLanguage> portfolioForeignLanguages = portfolioForeignLanguageRepository.findAllByPortfolioId(portfolioId);
+        portfolioForeignLanguageRepository.deleteAll(portfolioForeignLanguages);
+        List<PortfolioProject> portfolioProjects = portfolioProjectRepository.findAllByPortfolioId(portfolioId);
+        portfolioProjectRepository.deleteAll(portfolioProjects);
+        List<PortfolioSns> portfolioSns = portfolioSnsRepository.findAllByPortfolioId(portfolioId);
+        portfolioSnsRepository.deleteAll(portfolioSns);
+        List<PortfolioTech> portfolioTeches = portfolioTechRepository.findAllByPortfolioId(portfolioId);
+        portfolioTechRepository.deleteAll(portfolioTeches);
+
+        portfolioRepository.deleteById(portfolioId);
+        return new PortfolioDeleteResponse(true, "삭제 성공");
+    }
 }

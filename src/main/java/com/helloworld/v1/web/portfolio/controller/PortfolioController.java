@@ -1,9 +1,6 @@
 package com.helloworld.v1.web.portfolio.controller;
 
-import com.helloworld.v1.web.portfolio.dto.PortfolioCreateRequest;
-import com.helloworld.v1.web.portfolio.dto.PortfolioCreateResponse;
-import com.helloworld.v1.web.portfolio.dto.PortfolioGetLatestResponse;
-import com.helloworld.v1.web.portfolio.dto.PortfolioGetResponse;
+import com.helloworld.v1.web.portfolio.dto.*;
 import com.helloworld.v1.web.portfolio.dto.portfolionick.PortfolioGetNicknameResponse;
 import com.helloworld.v1.web.portfolio.service.PortfolioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,5 +45,11 @@ public class PortfolioController {
     @GetMapping("/{nickname}")
     public ResponseEntity<PortfolioGetNicknameResponse> getPortfolioByNickname(@PathVariable("nickname") String nickname) {
         return ResponseEntity.ok(portfolioService.getPortfolioByNickname(nickname));
+    }
+
+    @Operation(summary = "PX1", description = "포트폴리오 삭제 (사용 주의)") // Swagger 표시
+    @DeleteMapping("/{portfolioId}")
+    public ResponseEntity<PortfolioDeleteResponse> deletePortfolio(@PathVariable("portfolioId") Long portfolioId) {
+        return ResponseEntity.ok(portfolioService.deletePortfolio(portfolioId));
     }
 }

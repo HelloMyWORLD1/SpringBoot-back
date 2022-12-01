@@ -28,4 +28,10 @@ public class PortfolioProject {
         this.content = content;
         this.portfolioId = portfolioId;
     }
+
+    public void updatePortfolioProject(String title, String content, Long portfolioId) {
+        this.title = title;
+        this.content = content;
+        this.portfolioId = portfolioId;
+    }
 }

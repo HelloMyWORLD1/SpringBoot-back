@@ -31,4 +31,11 @@ public class PortfolioCareer {
         this.content = content;
         this.portfolioId = portfolioId;
     }
+
+    public void updatePortfolioCareer(String year, String title, String content, Long portfolioId) {
+        this.year = year;
+        this.title = title;
+        this.content = content;
+        this.portfolioId = portfolioId;
+    }
 }

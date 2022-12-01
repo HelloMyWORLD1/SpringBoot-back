@@ -52,4 +52,11 @@ public class PortfolioController {
     public ResponseEntity<PortfolioDeleteResponse> deletePortfolio(Authentication authentication) {
         return ResponseEntity.ok(portfolioService.deletePortfolio(authentication));
     }
+
+    @Operation(summary = "P6", description = "포트폴리오 수정") // Swagger 표시
+    @PutMapping("")
+    public ResponseEntity<PortfolioUpdateResponse> updatePortfolio(@Validated @RequestBody PortfolioCreateRequest portfolioCreateRequest,
+                                                                   Authentication authentication) {
+        return ResponseEntity.ok(portfolioService.updatePortfolio(portfolioCreateRequest, authentication));
+    }
 }

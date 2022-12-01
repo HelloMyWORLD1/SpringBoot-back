@@ -36,4 +36,11 @@ public class Portfolio {
         this.education = education;
         this.userId = userId;
     }
+
+    public void updatePortfolio(String detailJob, String title, String introduce, String education) {
+        this.detailJob = detailJob;
+        this.title = title;
+        this.introduce = introduce;
+        this.education = education;
+    }
 }

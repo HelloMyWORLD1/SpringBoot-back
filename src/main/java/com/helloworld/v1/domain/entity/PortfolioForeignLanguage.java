@@ -25,4 +25,9 @@ public class PortfolioForeignLanguage {
         this.foreignLanguage = foreignLanguage;
         this.portfolioId = portfolioId;
     }
+
+    public void updatePortfolioForeignLanguage(String foreignLanguage, Long portfolioId) {
+        this.foreignLanguage = foreignLanguage;
+        this.portfolioId = portfolioId;
+    }
 }

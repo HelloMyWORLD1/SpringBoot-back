@@ -202,4 +202,11 @@ public class PortfolioService {
         portfolioRepository.deleteById(portfolioId);
         return new PortfolioDeleteResponse(true, "포트폴리오 삭제 완료");
     }
+
+    @Transactional
+    public PortfolioUpdateResponse updatePortfolio(PortfolioCreateRequest portfolioCreateRequest, Authentication authentication) {
+        deletePortfolio(authentication);
+        createPortfolio(portfolioCreateRequest, authentication);
+        return new PortfolioUpdateResponse(true, "포트폴리오 수정 완료");
+    }
 }

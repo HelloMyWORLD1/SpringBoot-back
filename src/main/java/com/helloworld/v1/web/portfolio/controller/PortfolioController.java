@@ -47,9 +47,16 @@ public class PortfolioController {
         return ResponseEntity.ok(portfolioService.getPortfolioByNickname(nickname));
     }
 
-    @Operation(summary = "PX1", description = "포트폴리오 삭제 (사용 주의)") // Swagger 표시
-    @DeleteMapping("/{portfolioId}")
-    public ResponseEntity<PortfolioDeleteResponse> deletePortfolio(@PathVariable("portfolioId") Long portfolioId) {
-        return ResponseEntity.ok(portfolioService.deletePortfolio(portfolioId));
+    @Operation(summary = "P5", description = "포트폴리오 삭제") // Swagger 표시
+    @DeleteMapping("")
+    public ResponseEntity<PortfolioDeleteResponse> deletePortfolio(Authentication authentication) {
+        return ResponseEntity.ok(portfolioService.deletePortfolio(authentication));
+    }
+
+    @Operation(summary = "P6", description = "포트폴리오 수정") // Swagger 표시
+    @PutMapping("")
+    public ResponseEntity<PortfolioUpdateResponse> updatePortfolio(@Validated @RequestBody PortfolioCreateRequest portfolioCreateRequest,
+                                                                   Authentication authentication) {
+        return ResponseEntity.ok(portfolioService.updatePortfolio(portfolioCreateRequest, authentication));
     }
 }

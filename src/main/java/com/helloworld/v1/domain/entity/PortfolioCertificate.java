@@ -25,4 +25,9 @@ public class PortfolioCertificate {
         this.certificate = certificate;
         this.portfolioId = portfolioId;
     }
+
+    public void updatePortfolioCertificate(String certificate, Long portfolioId) {
+        this.certificate = certificate;
+        this.portfolioId = portfolioId;
+    }
 }

@@ -176,10 +176,15 @@ public class PortfolioService {
     }
 
     @Transactional
-    public PortfolioDeleteResponse deletePortfolio(Long portfolioId) {
-        if (!portfolioRepository.existsById(portfolioId)) {
-            throw new ApiException(ExceptionEnum.NO_SEARCH_RESOURCE);
-        }
+    public PortfolioDeleteResponse deletePortfolio(Authentication authentication) {
+        String username = authentication.getName();
+        User user = userRepository.findOneWithAuthoritiesByUsername(username).orElseThrow(
+                () -> new ApiException(ExceptionEnum.NOT_FOUND_USER_BY_TOKEN)
+        );
+        Portfolio portfolio = portfolioRepository.findByUserId(user.getUserId()).orElseThrow(
+                () -> new ApiException(ExceptionEnum.NO_SEARCH_RESOURCE)
+        );
+        Long portfolioId = portfolio.getId();
 
         List<PortfolioCareer> portfolioCareers = portfolioCareerRepository.findAllByPortfolioId(portfolioId);
         portfolioCareerRepository.deleteAll(portfolioCareers);
@@ -195,6 +200,6 @@ public class PortfolioService {
         portfolioTechRepository.deleteAll(portfolioTeches);
 
         portfolioRepository.deleteById(portfolioId);
-        return new PortfolioDeleteResponse(true, "삭제 성공");
+        return new PortfolioDeleteResponse(true, "포트폴리오 삭제 완료");
     }
 }

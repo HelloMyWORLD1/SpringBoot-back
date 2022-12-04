@@ -1,8 +1,6 @@
-package com.helloworld.v1.web.portfolio.dto;
+package com.helloworld.v1.web.portfolio.dto.v1;
 
 import com.helloworld.v1.domain.entity.Portfolio;
-import com.helloworld.v1.domain.entity.PortfolioProject;
-import com.helloworld.v1.domain.entity.PortfolioTech;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

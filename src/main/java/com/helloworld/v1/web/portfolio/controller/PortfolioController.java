@@ -1,7 +1,7 @@
 package com.helloworld.v1.web.portfolio.controller;
 
-import com.helloworld.v1.web.portfolio.dto.*;
-import com.helloworld.v1.web.portfolio.dto.portfolionick.PortfolioGetNicknameResponse;
+import com.helloworld.v1.web.portfolio.dto.v1.*;
+import com.helloworld.v1.web.portfolio.dto.v1.portfolionick.PortfolioGetNicknameResponse;
 import com.helloworld.v1.web.portfolio.service.PortfolioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

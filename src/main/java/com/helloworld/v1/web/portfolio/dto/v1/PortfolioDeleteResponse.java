@@ -1,4 +1,4 @@
-package com.helloworld.v1.web.portfolio.dto;
+package com.helloworld.v1.web.portfolio.dto.v1;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

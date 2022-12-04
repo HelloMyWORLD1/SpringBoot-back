@@ -5,6 +5,7 @@ import com.helloworld.v1.domain.repository.*;
 import com.helloworld.v1.web.portfolio.dto.v2.PortfolioGetCountResponse;
 import com.helloworld.v1.web.portfolio.dto.v2.PortfolioGetDataDto;
 import com.helloworld.v1.web.portfolio.dto.v2.PortfolioGetLatestResponse;
+import com.helloworld.v1.web.portfolio.dto.v2.PortfolioGetResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -59,5 +60,25 @@ public class V2PortfolioService {
             ));
         }
         return new PortfolioGetLatestResponse(true, "페이지에 따른 데이터 가져오기 성공.", portfolioGetDataDtos);
+    }
+
+    public PortfolioGetResponse getPortfolios(String field) {
+        List<Portfolio> portfolios = portfolioRepository.findTop12ByField(field);
+        List<PortfolioGetDataDto> data = new ArrayList<>();
+        for (Portfolio portfolio : portfolios) {
+            User user = userRepository.findById(portfolio.getUserId()).get();
+            data.add(new PortfolioGetDataDto(user.getNickname(),
+                    portfolio.getDetailJob(),
+                    portfolio.getTitle(),
+                    portfolio.getIntroduce(),
+                    userFollowRepository.findAllByUserId(user.getUserId()).stream()
+                            .map(u -> userRepository.findById(u.getFollowingId()).get().getNickname())
+                            .distinct().collect(Collectors.toList()),
+                    userFollowRepository.findAllByFollowingId(user.getUserId()).stream()
+                            .map(u -> userRepository.findById(u.getUserId()).get().getNickname())
+                            .distinct().collect(Collectors.toList())
+            ));
+        }
+        return new PortfolioGetResponse(true, "로그인 체크 성공", data);
     }
 }

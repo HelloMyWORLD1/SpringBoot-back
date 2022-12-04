@@ -40,4 +40,12 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
             "LIMIT 12"
             , nativeQuery = true)
     List<Portfolio> findTop12ByField(@Param("field") String field);
+
+    @Query(value = "select count(*) " +
+            "from portfolio as p " +
+            "RIGHT JOIN user as u " +
+            "ON p.user_id = u.user_id " +
+            "WHERE u.field = :field AND p.id IS NOT NULL "
+            , nativeQuery = true)
+    Long countPortfolioByField(@Param("field") String field);
 }

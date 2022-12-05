@@ -2,8 +2,6 @@ package com.helloworld.v1.web.blog.controller;
 
 import com.helloworld.v1.web.blog.dto.*;
 import com.helloworld.v1.web.blog.service.BlogService;
-import com.helloworld.v1.web.portfolio.dto.PortfolioCreateRequest;
-import com.helloworld.v1.web.portfolio.dto.PortfolioCreateResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

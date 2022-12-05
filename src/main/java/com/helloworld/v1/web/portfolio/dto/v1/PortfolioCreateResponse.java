@@ -1,4 +1,4 @@
-package com.helloworld.v1.web.portfolio.dto.portfolionick;
+package com.helloworld.v1.web.portfolio.dto.v1;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PortfolioGetNicknameResponse {
+public class PortfolioCreateResponse {
     private Boolean success;
     private String message;
-    private PortfolioGetNicknameDataDto data;
 }

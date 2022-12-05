@@ -1,7 +1,5 @@
 package com.helloworld.v1.web.social.controller;
 
-import com.helloworld.v1.web.portfolio.dto.PortfolioCreateRequest;
-import com.helloworld.v1.web.portfolio.dto.PortfolioCreateResponse;
 import com.helloworld.v1.web.social.dto.SocialFollowRequest;
 import com.helloworld.v1.web.social.dto.SocialFollowResponse;
 import com.helloworld.v1.web.social.dto.SocialUnfollowRequest;

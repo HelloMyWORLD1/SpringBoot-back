@@ -1,4 +1,4 @@
-package com.helloworld.v1.web.portfolio.dto.portfolionick;
+package com.helloworld.v1.web.portfolio.dto.v1.portfolionick;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,8 +23,8 @@ public class PortfolioGetNicknameDataDto {
     private List<String> foreignLanguage = new ArrayList<>();
     private List<PortfolioGetNicknameDataProjectDto> project = new ArrayList<>();
     private List<PortfolioGetNicknameDataCareerDto> career = new ArrayList<>();
-    private List<String> followers = new ArrayList<>();
     private List<String> followings = new ArrayList<>();
+    private List<String> followers = new ArrayList<>();
 
     public PortfolioGetNicknameDataDto(List<String> sns, String detailJob, String title, String introduce, String profileImage, String field, List<PortfolioGetNicknameDataTechDto> tech, String education, List<String> certificate, List<String> foreignLanguage, List<PortfolioGetNicknameDataProjectDto> project, List<PortfolioGetNicknameDataCareerDto> career) {
         this.sns = sns;

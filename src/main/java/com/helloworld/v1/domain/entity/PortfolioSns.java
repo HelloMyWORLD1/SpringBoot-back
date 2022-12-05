@@ -25,4 +25,9 @@ public class PortfolioSns {
         this.sns = sns;
         this.portfolioId = portfolioId;
     }
+
+    public void updatePortfolioSns(String sns, Long portfolioId) {
+        this.sns = sns;
+        this.portfolioId = portfolioId;
+    }
 }

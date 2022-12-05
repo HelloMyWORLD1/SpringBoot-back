@@ -1,4 +1,4 @@
-package com.helloworld.v1.web.portfolio.dto;
+package com.helloworld.v1.web.portfolio.dto.v1;
 
 import com.helloworld.v1.domain.entity.PortfolioProject;
 import lombok.AllArgsConstructor;

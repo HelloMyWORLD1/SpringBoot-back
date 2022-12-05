@@ -4,13 +4,12 @@ import com.helloworld.v1.common.exception.ApiException;
 import com.helloworld.v1.common.exception.ExceptionEnum;
 import com.helloworld.v1.domain.entity.*;
 import com.helloworld.v1.domain.repository.*;
-import com.helloworld.v1.web.portfolio.dto.*;
-import com.helloworld.v1.web.portfolio.dto.portfolionick.*;
+import com.helloworld.v1.web.portfolio.dto.v1.*;
+import com.helloworld.v1.web.portfolio.dto.v1.portfolionick.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -173,5 +172,40 @@ public class PortfolioService {
                         .map(u -> userRepository.findById(u.getUserId()).get().getNickname())
                         .distinct().collect(Collectors.toList()));
         return new PortfolioGetNicknameResponse(true, "개인 포트폴리오 조회 성공", data);
+    }
+
+    @Transactional
+    public PortfolioDeleteResponse deletePortfolio(Authentication authentication) {
+        String username = authentication.getName();
+        User user = userRepository.findOneWithAuthoritiesByUsername(username).orElseThrow(
+                () -> new ApiException(ExceptionEnum.NOT_FOUND_USER_BY_TOKEN)
+        );
+        Portfolio portfolio = portfolioRepository.findByUserId(user.getUserId()).orElseThrow(
+                () -> new ApiException(ExceptionEnum.NO_SEARCH_RESOURCE)
+        );
+        Long portfolioId = portfolio.getId();
+
+        List<PortfolioCareer> portfolioCareers = portfolioCareerRepository.findAllByPortfolioId(portfolioId);
+        portfolioCareerRepository.deleteAll(portfolioCareers);
+        List<PortfolioCertificate> portfolioCertificates = portfolioCertificateRepository.findAllByPortfolioId(portfolioId);
+        portfolioCertificateRepository.deleteAll(portfolioCertificates);
+        List<PortfolioForeignLanguage> portfolioForeignLanguages = portfolioForeignLanguageRepository.findAllByPortfolioId(portfolioId);
+        portfolioForeignLanguageRepository.deleteAll(portfolioForeignLanguages);
+        List<PortfolioProject> portfolioProjects = portfolioProjectRepository.findAllByPortfolioId(portfolioId);
+        portfolioProjectRepository.deleteAll(portfolioProjects);
+        List<PortfolioSns> portfolioSns = portfolioSnsRepository.findAllByPortfolioId(portfolioId);
+        portfolioSnsRepository.deleteAll(portfolioSns);
+        List<PortfolioTech> portfolioTeches = portfolioTechRepository.findAllByPortfolioId(portfolioId);
+        portfolioTechRepository.deleteAll(portfolioTeches);
+
+        portfolioRepository.deleteById(portfolioId);
+        return new PortfolioDeleteResponse(true, "포트폴리오 삭제 완료");
+    }
+
+    @Transactional
+    public PortfolioUpdateResponse updatePortfolio(PortfolioCreateRequest portfolioCreateRequest, Authentication authentication) {
+        deletePortfolio(authentication);
+        createPortfolio(portfolioCreateRequest, authentication);
+        return new PortfolioUpdateResponse(true, "포트폴리오 수정 완료");
     }
 }

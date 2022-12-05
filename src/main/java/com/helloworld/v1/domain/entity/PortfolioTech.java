@@ -28,4 +28,10 @@ public class PortfolioTech {
         this.content = content;
         this.portfolioId = portfolioId;
     }
+
+    public void updatePortfolioTech(String techName, String content, Long portfolioId) {
+        this.techName = techName;
+        this.content = content;
+        this.portfolioId = portfolioId;
+    }
 }

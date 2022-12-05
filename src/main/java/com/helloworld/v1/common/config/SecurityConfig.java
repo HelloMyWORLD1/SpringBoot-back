@@ -85,6 +85,8 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/api/portfolio/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/blog/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/blogs/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/user/**").permitAll()
+
 
                 .anyRequest().authenticated()
 

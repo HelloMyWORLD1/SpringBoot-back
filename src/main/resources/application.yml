@@ -12,14 +12,14 @@ spring:
       enabled: true
   config:
     import:
-#      - application-local.yml # Notion 코드공유 확인
+      - application-local.yml # Notion 코드공유 확인
       - application-jwt.yml
-      - application-dev.yml # Notion 코드공유 확인
-      - application-dev2.yml # Notion 코드공유 확인
+      - application-dev2.yml
+#      - application-dev.yml # Notion 코드공유 확인
 
   jpa:
     hibernate:
-      ddl-auto: update # none 하려면 초기데이터 삭제해야함
+      ddl-auto: none # none 하려면 초기데이터 삭제해야함
     properties:
       hibernate:
         format_sql: true

@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Tag(name = "Auth")
@@ -50,10 +49,9 @@ public class UserController {
     }
 
     @Operation(summary = "U7", description = "닉네임을 통한 회원 정보 조회")
-    @GetMapping("/user/nickname")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @GetMapping("/user/{nickname}")
     public ResponseEntity<GetUserByNicknameResponse> getUserByNickname(
-            @RequestParam(value = "nickname", required = false, defaultValue = "") String nickname
+            @PathVariable("nickname") String nickname
     ){
         return ResponseEntity.ok(userService.getUserByNickname(nickname));
     }

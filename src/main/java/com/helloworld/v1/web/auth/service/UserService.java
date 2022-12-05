@@ -187,7 +187,6 @@ public class UserService {
 
         findUser.update(
                 updateUserRequest.getEmail(),
-                passwordEncoder.encode(updateUserRequest.getPassword()),
                 updateUserRequest.getField(),
                 updateUserRequest.getPhone(),
                 updateUserRequest.getBirth(),
